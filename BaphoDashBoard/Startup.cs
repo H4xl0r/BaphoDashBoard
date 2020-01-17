@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BaphoDashBoard.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using BaphoDashBoard.DAL.Services;
 
 namespace BaphoDashBoard
 {
@@ -24,8 +27,20 @@ namespace BaphoDashBoard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings appSettings = new AppSettings();
+            Configuration.GetSection("AppSettings").Bind(appSettings);
+            services.AddDbContext<MyLocalDatabase>(
+
+                options => options.UseSqlite(
+               String.Format( "Data Source={0}",appSettings.DatabaseName)
+            ));
+
+            //services.AddDbContext<MyLocalDatabase>(options => options.UseSqlite("Data Source=BaphometDB.db"));
             services.AddControllersWithViews();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //My Services
+            services.AddTransient<AccountService>();
+            services.AddTransient<ManagementService>();
 
         }
 
