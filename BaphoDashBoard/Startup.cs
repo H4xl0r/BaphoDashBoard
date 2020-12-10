@@ -35,12 +35,15 @@ namespace BaphoDashBoard
                String.Format( "Data Source={0}",appSettings.DatabaseName)
             ));
 
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+
             //services.AddDbContext<MyLocalDatabase>(options => options.UseSqlite("Data Source=BaphometDB.db"));
             services.AddControllersWithViews();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //My Services
             services.AddTransient<AccountService>();
             services.AddTransient<ManagementService>();
+            services.AddTransient<BaseService>();
 
         }
 

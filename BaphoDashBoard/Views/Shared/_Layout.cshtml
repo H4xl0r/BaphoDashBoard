@@ -1,17 +1,11 @@
 ﻿@{ Layout = "~/Views/Shared/_MainLayout.cshtml"; }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BaphoDashBoard</title>
-</head>
-<body style="background:#000000">
+
     @Html.Partial("_MainMenu")
     <div class="container-fluid">
         <main role="main" class="pb-3 no-padding">
             @RenderBody()
+            @RenderSection("Content", required: false)
         </main>
     </div>
 
@@ -20,6 +14,7 @@
             &copy; 2019 - BaphoDashBoard - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>
+
+@section scripts {
+    @RenderSection("scripts", required: false);
+}

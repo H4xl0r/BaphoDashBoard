@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SRI_Inquiry
+namespace BaphoDashBoard
 {
     public abstract class ResultBase
     {
@@ -15,9 +15,9 @@ namespace SRI_Inquiry
         public string message { get; set; }
     }
 
-    public class SRIResult<T> : ResultBase where T : class
+    public class AppResult<T> : ResultBase where T : class
     {
-        public SRIResult()
+        public AppResult()
         {
             if (typeof(T) != typeof(String))
                 MRObject = (T)Activator.CreateInstance(typeof(T));
@@ -27,9 +27,9 @@ namespace SRI_Inquiry
         public T MRObject { get; set; }
     }
 
-    public class SRIResult : ResultBase
+    public class AppResult : ResultBase
     {
-        public SRIResult()
+        public AppResult()
         {
         }
     }
