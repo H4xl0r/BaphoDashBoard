@@ -8,6 +8,8 @@ namespace BaphoDashBoard.DTO
 {
     public class VictimDetailsDTO
     {
+        [JsonProperty("id")]
+        public int Id { get; set; }
         [JsonProperty("ip")]
         public string Ip { get; set; }
         [JsonProperty("hostname")]
@@ -26,5 +28,9 @@ namespace BaphoDashBoard.DTO
         public string MachineName { get; set; }
         [JsonProperty("machine_Os")]
         public string MachineOs { get; set; }
+        [JsonProperty("latitude")]
+        public string Latitude { get; set; }
+        [JsonProperty("longitude")]
+        public string Longitude { get; set; }
     }
 }

@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <div class="small-box" style="margin-bottom:0;background-color:#666">
                     <div class="inner">
-                        <h3>140</h3>
+                        <h3>{{data.machines}}</h3>
                         <p>Infected machines</p>
                     </div>
                     <div class="icon">
@@ -22,7 +22,7 @@
             <div class="col-md-12">
                 <div class="small-box" style="margin-bottom:0; background-color:#666">
                     <div class="inner">
-                        <h3>140</h3>
+                        <h3>{{data.countries}}</h3>
                         <p>Infected Countries</p>
                     </div>
                     <div class="icon">
@@ -37,7 +37,7 @@
             <div class="col-md-12">
                 <div class="small-box " style="margin-bottom: 0;background-color:#666">
                     <div class="inner">
-                        <h3>140</h3>
+                        <h3>{{data.windowsOS}}</h3>
                         <p>Windows OS</p>
                     </div>
                     <div class="icon">
@@ -53,7 +53,7 @@
             <div class="col-md-12">
                 <div class="small-box" style="margin-bottom:0;background-color:#666">
                     <div class="inner">
-                        <h3>140</h3>
+                        <h3>{{data.linuxOs}}</h3>
                         <p>Linux OS</p>
                     </div>
                     <div class="icon">
@@ -69,8 +69,8 @@
             <div class="col-md-12">
                 <div class="small-box" style="margin-bottom:0;background-color:#666">
                     <div class="inner">
-                        <h3>$12,000.00</h3>
-                        <p>Generated</p>
+                        <h3>{{data.cities}}</h3>
+                        <p>Cities</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-money"></i>
@@ -105,7 +105,7 @@
             <div class="col-md-1">
                 <div class="box box-danger" style="background-color:#666">
                     <div class="box-body">
-                        <img v-on:click="updateData" class="img-fluid" src="~/Images/cloud.png" alt="Responsive image">
+                        <img v-on:click="updateData()" class="img-fluid" src="~/Images/cloud.png" alt="Responsive image">
                     </div>
                 </div>
             </div>
@@ -131,7 +131,8 @@
 
                 getVictimsData: function () {
                     this.get_request('@Url.Action("GetVictimData","Home")').then(response => {
-                        this.data = response.data;
+                        this.data = response.data.mrObject;
+                        console.log(this.data);
                     });
                 },
 

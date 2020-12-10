@@ -29,13 +29,13 @@ namespace BaphoDashBoard.Controllers
 
         public async Task<IActionResult> GetHostData()
         {
-            var result = _service.GetHostData();
-            return Json(result.Result);
+            var result = await _service.GetHostData();
+            return Json(result);
         }
 
         public async Task<IActionResult> GetVictimData()
         {
-            var result = _service.GetVictimData();
+            var result = await _service.GetVictimData();
 
             return Json(result);
         }

