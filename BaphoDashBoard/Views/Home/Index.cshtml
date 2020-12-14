@@ -18,20 +18,6 @@
                 </div>
             </div>
         </div><!--</box1-->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="small-box" style="margin-bottom:0; background-color:#666">
-                    <div class="inner">
-                        <h3>{{data.countries}}</h3>
-                        <p>Infected Countries</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-map"></i>
-                    </div>
-                    <a class="small-box-footer" style="background-color:#000000"></a>
-                </div>
-            </div>
-        </div><!--</box2-->
 
         <div class="row">
             <div class="col-md-12">
@@ -47,7 +33,7 @@
                 </div>
 
             </div>
-        </div><!--</box3-->
+        </div><!--</box2-->
 
         <div class="row">
             <div class="col-md-12">
@@ -63,6 +49,21 @@
                 </div>
 
             </div>
+        </div><!--</box3-->
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="small-box" style="margin-bottom:0; background-color:#666">
+                    <div class="inner">
+                        <h3>{{data.countries}}</h3>
+                        <p>Infected Countries</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-map"></i>
+                    </div>
+                    <a class="small-box-footer" style="background-color:#000000"></a>
+                </div>
+            </div>
         </div><!--</box4-->
 
         <div class="row">
@@ -73,7 +74,7 @@
                         <p>Cities</p>
                     </div>
                     <div class="icon">
-                        <i class="fa fa-money"></i>
+                        <i class="fa fa-map-marker"></i>
                     </div>
                     <a class="small-box-footer" style="background-color:#000000"></a>
                 </div>
@@ -105,7 +106,7 @@
             <div class="col-md-5">
                 <div class="box box-danger" style="background-color:#666">
                     <div class="box-body">
-
+                        <doughnut-chart :url="'/Home/GetOSData'"></doughnut-chart>
                     </div>
                 </div>
             </div>
@@ -150,11 +151,8 @@
                 draw_map: function(){
 
                     var baseLayer = new L.tileLayer(
-                        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                        // maxZoom: 5
-                         }
-                    );
-
+                        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
+                   
                     this.map = new L.map('map', {
                     center: [18.42641, -66.0639655],
                     zoom: 8,

@@ -9,6 +9,7 @@ using BaphoDashBoard.Models;
 using System.Text;
 using System.Security.Cryptography;
 using BaphoDashBoard.DAL.Services;
+using static BaphoDashBoard.CustomModels.ChartComponents;
 
 namespace BaphoDashBoard.Controllers
 {
@@ -36,6 +37,23 @@ namespace BaphoDashBoard.Controllers
         public async Task<IActionResult> GetVictimData()
         {
             var result = await _service.GetVictimData();
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetOSData()
+        {
+            AppResult<VMChart<string>> result = new AppResult<VMChart<string>>();
+
+            try
+            {
+                var list = await _service.GetmachinesOs();
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
 
             return Json(result);
         }

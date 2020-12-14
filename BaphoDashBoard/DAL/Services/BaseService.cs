@@ -135,8 +135,11 @@ namespace BaphoDashBoard.DAL.Services
                     result.MRObject.VictimDetails.Add(victim);
                 }
 
-                result.MRObject.WindowsOS = query.Where(x => microsoft_reference.Contains(x.MachineOS)).Count();
-                result.MRObject.LinuxOs = query.Where(x => linux_refrence.Contains(x.MachineOS)).Count();//debo verificar esto ya que no llega nada
+                result.MRObject.WindowsOS = query.Select(x => microsoft_reference.Any(x.MachineOS.Contains)).Count();
+                result.MRObject.LinuxOs = query.Where(x => linux_refrence.Any(x.MachineOS.Contains)).Count();
+
+
+
                 result.MRObject.Countries = query.GroupBy(x => x.Country).Select(s => s.First()).Count();
                 result.MRObject.Cities = query.GroupBy(x => x.City).Select(s => s.First()).Count();
                 result.MRObject.Machines = query.Count;
@@ -147,6 +150,29 @@ namespace BaphoDashBoard.DAL.Services
             {
                 result.success = false;
                 result.message = ex.Message;
+            }
+            return result;
+        }
+
+        public async Task<List<ChartDTO>> GetmachinesOs()
+        {
+            List<ChartDTO> result = new List<ChartDTO>();
+            try
+            {
+                var microsoft_reference = new[] { "Windows", "windows", "Microsoft", "mocrisoft" };
+                var linux_refrence = new[] { "Linux", "linux" };
+                var list = await _context.VictimDetail.Select(x => new VictimDetail()
+                {
+                    MachineOS = x.MachineOS
+                }).ToArrayAsync();
+
+                
+
+                
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             return result;
         }
