@@ -137,9 +137,6 @@ namespace BaphoDashBoard.DAL.Services
 
                 result.MRObject.WindowsOS = query.Select(x => microsoft_reference.Any(x.MachineOS.Contains)).Count();
                 result.MRObject.LinuxOs = query.Where(x => linux_refrence.Any(x.MachineOS.Contains)).Count();
-
-
-
                 result.MRObject.Countries = query.GroupBy(x => x.Country).Select(s => s.First()).Count();
                 result.MRObject.Cities = query.GroupBy(x => x.City).Select(s => s.First()).Count();
                 result.MRObject.Machines = query.Count;
@@ -166,11 +163,16 @@ namespace BaphoDashBoard.DAL.Services
                     MachineOS = x.MachineOS
                 }).ToArrayAsync();
 
-                
+                var windowsOs = list.Where(x => microsoft_reference.Any(x.MachineOS.Contains)).Count();
+                var linux = list.Where(x => linux_refrence.Any(x.MachineOS.Contains)).Count();
 
-                
+                foreach(var total in list)
+                {
+
+                }
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
