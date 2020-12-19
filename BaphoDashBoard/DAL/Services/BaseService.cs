@@ -163,11 +163,23 @@ namespace BaphoDashBoard.DAL.Services
                     MachineOS = x.MachineOS
                 }).ToArrayAsync();
 
-                var windowsOs = list.Where(x => microsoft_reference.Any(x.MachineOS.Contains)).Count();
-                var linuxOs = list.Where(x => linux_refrence.Any(x.MachineOS.Contains)).Count();
+                double porcent = 0;
+                double all_sum = list.Count();
 
-                var windoows_porcent = windowsOs / list.Count();
-                var linux_porcent = linuxOs / list.Count();
+                result.Add(new ChartDTO(){Name = "Windows", Value = list.Where(x => microsoft_reference.Any(x.MachineOS.Contains)).Count()});
+                result.Add(new ChartDTO(){Name = "Linux", Value = list.Where(x => linux_refrence.Any(x.MachineOS.Contains)).Count()});
+
+                foreach(var machine_os in result)
+                {
+                    double value = machine_os.Value / all_sum;
+                    if(Double.IsNaN(value))
+                    {
+                        value = 0;
+                    }
+                    porcent = Math.Round(value * 100);
+                    machine_os.Porcent = Convert.ToInt32(porcent);
+                }
+
             }
             catch (Exception ex)
             {
