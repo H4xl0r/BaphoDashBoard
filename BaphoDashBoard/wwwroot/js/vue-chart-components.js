@@ -19,7 +19,7 @@
             await axios.get(this.url).then(response => {
 
                 if (response.data !== null) {
-
+                        console.log(response.data);
                     if (response.data.success !== false) {
 
                         var charData = [];
