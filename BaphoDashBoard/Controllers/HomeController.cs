@@ -48,6 +48,14 @@ namespace BaphoDashBoard.Controllers
             try
             {
                 var list = await _service.GetmachinesOs();
+                if(list.Count != 0)
+                {
+                    VMChartDataset<string> vmChartDataset = new VMChartDataset<string>();
+                    vmChartDataset.Data.AddRange(list.Select(x => x.Porcent.ToString()).ToList());
+                    result.MRObject.Labels = list.Select(x => x.Name).ToList();
+                    result.MRObject.DataSet.Add(vmChartDataset);
+                    result.MRObject.MultipleDataset = false;
+                }
             }
             catch(Exception ex)
             {

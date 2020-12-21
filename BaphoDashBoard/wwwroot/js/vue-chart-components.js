@@ -19,14 +19,13 @@
             await axios.get(this.url).then(response => {
 
                 if (response.data !== null) {
-                        console.log(response.data);
                     if (response.data.success !== false) {
 
                         var charData = [];
                         var dataset = {
                             label: "",
-                            backgroundColor: [],
-                            hoverBackgroundColor: [],
+                            backgroundColor: ["#0066CC","#FFD700"],
+                            hoverBackgroundColor: ["#0052A3","#DAA520"],
                             data: []
                         };
 

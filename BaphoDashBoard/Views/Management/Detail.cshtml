@@ -1,0 +1,120 @@
+﻿@model DetailsViewModel
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dt-custom {
+        margin-top: 4px;
+        color: #fff;
+        font-weight:300;
+    }
+
+    .custom-span {
+        font-weight: 700;
+        color: #b8c7ce
+    }
+
+    .custom-scroll{
+        overflow-y:scroll;
+        -webkit-overflow-scrolling:touch;
+        -ms-overflow-style: none;
+        scrollbar-width:none;
+    }
+
+    .custom-scroll ul li{
+        list-style:none;
+    }
+</style>
+
+<div id="app" class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header" style="background-color:#666">
+                        <h4 class="box-title" style="color:#ffff">Details</h4><small style="color:#fff">...</small>
+
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-social-icon" style="cursor:pointer">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-danger" style="background-color:#666">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <dl class="dl-horizontal">
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.MachineName) :</span> @Html.DisplayFor(model => model.MachineName)
+                                    </dt>
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.Machine_OS) :</span> @Html.DisplayFor(model => model.Machine_OS)
+                                    </dt>
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.HostName) :</span> @Html.DisplayFor(model => model.HostName)
+                                    </dt>
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.Ip) :</span> @Html.DisplayFor(model => model.Ip)
+                                    </dt>
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">Coordinates :</span> @Html.DisplayFor(model => model.Latitude) , @Html.DisplayFor(model => model.Longitude)
+                                    </dt>
+                                </dl>
+                            </div>
+
+                            <div class="col-md-4">
+                                <dl class="dl-horizontal">
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.Country) :</span> @Html.DisplayFor(model => model.Country)
+                                    </dt>
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.City) :</span> @Html.DisplayFor(model => model.City)
+                                    </dt>
+                                    <dt class="dt-custom">
+                                        <span class="custom-span">@Html.DisplayNameFor(model => model.Region) :</span> @Html.DisplayFor(model => model.Region)
+                                    </dt>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="box box-danger" style="background-color:#666">
+                    <div class="box-header">
+                        <h4 style="color:#ffff" class="box-title">Os version Related CVE'S</h4>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="custom-scroll" style="max-height:400px">
+                            @foreach (var cve in Model.Vulns)
+                            {
+                                <ul>
+                                    <li class="row">
+                                        <div class="box-header">
+                                            <h5 class="box-title custom-span">@cve</h5>
+                                            <a href="@string.Format("https://cve.mitre.org/cgi-bin/cvename.cgi?name=" + cve)">
+                                                <small style="color:#fff"> [read more]</small>
+
+                                            </a>
+                                        </div>
+                                        
+                                    </li>
+                            </ul>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

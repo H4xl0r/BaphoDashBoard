@@ -91,6 +91,10 @@ namespace BaphoDashBoard.DAL.Services
                                     result.message = "No new data found";
                                 }
                             }
+                            else
+                            {
+                                result.message = "No new data found";
+                            }
                         }
                         else
                         {
@@ -114,7 +118,7 @@ namespace BaphoDashBoard.DAL.Services
             {
                 var query = await _context.VictimDetail.ToListAsync();
                 var microsoft_reference = new[] {"Windows", "windows","Microsoft","mocrisoft"};
-                var linux_refrence = new[] {"Linux","linux"};
+                var linux_refrence = new[] {"Linux","linux", "Debian", "Ubuntu"};
 
                 foreach (var victim_info in query)
                 {
@@ -135,7 +139,7 @@ namespace BaphoDashBoard.DAL.Services
                     result.MRObject.VictimDetails.Add(victim);
                 }
 
-                result.MRObject.WindowsOS = query.Select(x => microsoft_reference.Any(x.MachineOS.Contains)).Count();
+                result.MRObject.WindowsOS = query.Where(x => microsoft_reference.Any(x.MachineOS.Contains)).Count();
                 result.MRObject.LinuxOs = query.Where(x => linux_refrence.Any(x.MachineOS.Contains)).Count();
                 result.MRObject.Countries = query.GroupBy(x => x.Country).Select(s => s.First()).Count();
                 result.MRObject.Cities = query.GroupBy(x => x.City).Select(s => s.First()).Count();

@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using BaphoDashBoard.DAL.Services;
+using BaphoDashBoard.VueModels;
 
 namespace BaphoDashBoard.Controllers
 {
@@ -19,7 +20,21 @@ namespace BaphoDashBoard.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View();
+            var list = await _service.GetRecordList();
+            return View(list);
+        }
+
+        public async Task<ActionResult> Detail(int id)
+        {
+            var victimdetails = await _service.Details(id);
+            return View(victimdetails);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromBody] int id)
+        {
+            var result = await _service.Delete(id);
+            return Json(result);
         }
 
     }

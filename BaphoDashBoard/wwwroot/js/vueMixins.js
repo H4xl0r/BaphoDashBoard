@@ -32,8 +32,24 @@
                // this.show_spinner = false;
             });
         },
-        show_notification: function (message) {
-            //this.bus.$emit('show_notification', message);
-        }
+        show_error_notification: function (message) {
+            $.toast({
+                heading: '',
+                text: message,
+                showHideTransition: 'slide',
+                position: 'bottom-right',
+                icon: 'error'
+            });
+        },
+
+        show_success_notification: function (message) {
+            $.toast({
+                heading: '',
+                text: message,
+                showHideTransition: 'slide',
+                position: 'bottom-right',
+                icon: 'success'
+            });
+        },
     }
 };

