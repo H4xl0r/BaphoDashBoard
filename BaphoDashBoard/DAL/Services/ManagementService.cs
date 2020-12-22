@@ -106,7 +106,7 @@ namespace BaphoDashBoard.DAL.Services
             var homePageLinks = new List<string>();
             var html = GetHtmlContent(url);
             var links = html.CssSelect("a");
-
+            //aqui debo crear otra variable para coger todas las etiquetas td o probar cogiendo todos los tr
             foreach (var link in links)
             {
                 if (link.Attributes["href"].Value.Contains("cvename"))

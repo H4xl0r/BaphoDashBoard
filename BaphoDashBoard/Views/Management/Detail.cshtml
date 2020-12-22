@@ -22,9 +22,11 @@
         -ms-overflow-style: none;
         scrollbar-width:none;
     }
-
-    .custom-scroll ul li{
-        list-style:none;
+        .custom-scroll::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+    .custom-scroll ul li {
+        list-style: none;
     }
 </style>
 
