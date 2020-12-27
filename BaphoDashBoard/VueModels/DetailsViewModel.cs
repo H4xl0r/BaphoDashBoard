@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BaphoDashBoard.DTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -31,5 +32,6 @@ namespace BaphoDashBoard.VueModels
         public string OsVersionInfo { get; set; }
         public List<String> Vulns { get; set; }
         public byte Photo { get; set; }
+        public List<NameAndValueDTO> CveInfo = new List<NameAndValueDTO>();
     }
 }

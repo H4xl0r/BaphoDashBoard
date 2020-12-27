@@ -161,7 +161,7 @@ namespace BaphoDashBoard.DAL.Services
             try
             {
                 var microsoft_reference = new[] { "Windows", "windows", "Microsoft", "mocrisoft" };
-                var linux_refrence = new[] { "Linux", "linux" };
+                var linux_refrence = new[] { "Linux", "linux","Debian", "debian", "Ubuntu" };
                 var list = await _context.VictimDetail.Select(x => new VictimDetail()
                 {
                     MachineOS = x.MachineOS

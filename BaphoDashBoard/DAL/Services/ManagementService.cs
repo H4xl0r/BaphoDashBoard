@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
+using BaphoDashBoard.DTO;
 
 namespace BaphoDashBoard.DAL.Services
 {
@@ -31,7 +32,7 @@ namespace BaphoDashBoard.DAL.Services
 
             return result;
         }
-        
+
         public async Task<List<VictimDetail>> GetRecordList()
         {
             List<VictimDetail> result = new List<VictimDetail>();
@@ -39,20 +40,20 @@ namespace BaphoDashBoard.DAL.Services
             {
                 result = await _context.VictimDetail.ToListAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
             return result;
         }
 
-        public async Task<AppResult>Delete(int id)
+        public async Task<AppResult> Delete(int id)
         {
             AppResult result = new AppResult();
             try
             {
                 var record_to_delete = await _context.VictimDetail.Where(x => x.Id == id).FirstOrDefaultAsync();
-                if(record_to_delete != null)
+                if (record_to_delete != null)
                 {
                     _context.VictimDetail.Remove(record_to_delete);
                     await _context.SaveChangesAsync();
@@ -60,7 +61,7 @@ namespace BaphoDashBoard.DAL.Services
                     result.message = "record delete";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.success = false;
                 result.message = ex.Message;
@@ -88,12 +89,12 @@ namespace BaphoDashBoard.DAL.Services
                     Region = s.Region,
                 }).FirstOrDefaultAsync();
 
-                var url = "https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword="+victimdetails.Machine_OS.Replace(" ","+");
+                var url = "https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=" + victimdetails.Machine_OS.Replace(" ", "+");
                 var pagelinks = GetPageLinks(url);
 
-                victimdetails.Vulns = pagelinks;
+                victimdetails.CveInfo = pagelinks;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -101,20 +102,37 @@ namespace BaphoDashBoard.DAL.Services
             return victimdetails;
         }
 
-        static List<string> GetPageLinks(string url)
+        static List<NameAndValueDTO> GetPageLinks(string url)
         {
-            var homePageLinks = new List<string>();
+            List<NameAndValueDTO> info = new List<NameAndValueDTO>();
+            var cve_info = "";
+            var cve_name = "";
+
             var html = GetHtmlContent(url);
-            var links = html.CssSelect("a");
+            var links = html.CssSelect("td");
             //aqui debo crear otra variable para coger todas las etiquetas td o probar cogiendo todos los tr
             foreach (var link in links)
             {
-                if (link.Attributes["href"].Value.Contains("cvename"))
+                //if (link.Attributes["href"].Value.Contains("cvename"))
+                //{
+                //    homePageLinks.Add(link.Attributes["href"].OwnerNode.InnerHtml);
+                //}
+
+                if (link.Attributes.Contains("valign") && !link.Attributes.Contains("nowrap"))
                 {
-                    homePageLinks.Add(link.Attributes["href"].OwnerNode.InnerHtml);
+                    cve_info = link.Attributes["valign"].OwnerNode.InnerHtml;
+                }
+                if (link.Attributes.Contains("valign") && link.Attributes.Contains("nowrap"))
+                {
+                    cve_name = link.InnerText;
+                }
+
+                if(cve_name != "" && cve_info != "")
+                {
+                    info.Add(new NameAndValueDTO() { Title = cve_name, Description = cve_info });
                 }
             }
-            return homePageLinks;
+            return info;
         }
 
         static HtmlNode GetHtmlContent(string url)
