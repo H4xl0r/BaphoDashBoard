@@ -15,6 +15,7 @@ namespace BaphoDashBoard.Models
         public string Md5Hash { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public DateTime ReleaseDate { get; set; }
         public string PublicKey { get; set; }
         public string PrivateKey { get; set; }
     }

