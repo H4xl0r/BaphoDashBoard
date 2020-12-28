@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "My Ransomwares";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app" class="row">
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header" style="background-color:#666">
+                        <h4 class="box-title" style="color:#ffff">My Ransomware's</h4><small style="color:#fff">...</small>
+
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-social-icon" style="cursor:pointer">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-danger" style="background-color:#666">
+                    <table class="table" style="color:#fff">
+                        <thead>
+                            <tr style="color:#dd4b39">
+                                <th class="text-center">Ransomware Name</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Release date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@foreach (VictimDetail record in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">@record.MachinName</td>
+                                    <td class="text-center">@record.MachineOS</td>
+                                    <td class="text-center">@record.Country</td>
+                                    <td class="text-center">@record.City</td>
+                                    <td class="text-center">@record.Ip </td>
+                                    <td class="no-padding">
+                                        <div class="margin">
+                                            <div class="btn-group">
+                                                <button class=" btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="#" v-on:click="detail(@record.Id)">Details</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" v-on:click="remove(@record.Id)">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="box box-danger" style="background-color:#666">
+                    <div class="box-header">
+
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label label-text-color">Ransomware name</label>
+                                    <input autocomplete="off" type="text" class="form-control text-center input-console" />
+                                </div>
+
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label label-text-color">Ransomware Description</label>
+                                    <input autocomplete="off" type="text" class="form-control text-center input-console" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

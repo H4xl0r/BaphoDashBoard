@@ -16,6 +16,8 @@ namespace BaphoDashBoard.Models
 
         public DbSet<VictimDetail> VictimDetail {get;set;}
         public DbSet<Administrators> Administrators { get; set; }
-        public DbSet<RsaKeys> RsaKeys { get; set; }
+        public DbSet<Ransomware> Ransomware { get; set; }
+
+       // public DbSet<RsaKeys> RsaKeys { get; set; }
     }
 }

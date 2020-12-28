@@ -107,13 +107,14 @@
                                             <h5 class="box-title custom-span">@cve.Title</h5>
                                         </div>
                                         <div class="col-md-9">
-                                            <h5 class="box-title" style="color:#fff">
-                                                @cve.Description
-                                                <a href="@string.Format("https://cve.mitre.org/cgi-bin/cvename.cgi?name=" + cve.Title)">
-                                                    <small style="color:rgb(29, 161, 242)"> [read more]</small>
-
-                                                </a>
-                                            </h5>
+                                            <div class="box-body">
+                                                <h5 class="box-title" style="color:#fff">
+                                                    @cve.Description
+                                                    <a href="@string.Format("https://cve.mitre.org/cgi-bin/cvename.cgi?name=" + cve.Title)">
+                                                        <small style="color:rgb(29, 161, 242)"> [read more]</small>
+                                                    </a>
+                                                </h5>
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>

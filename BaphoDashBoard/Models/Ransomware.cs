@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 
 namespace BaphoDashBoard.Models
 {
-    public class RsaKeys
+    public class Ransomware
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string Md5Hash { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string PublicKey { get; set; }
         public string PrivateKey { get; set; }
     }
