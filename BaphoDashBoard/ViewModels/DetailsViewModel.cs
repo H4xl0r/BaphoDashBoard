@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BaphoDashBoard.VueModels
+namespace BaphoDashBoard.ViewModels
 {
     public class DetailsViewModel
     {

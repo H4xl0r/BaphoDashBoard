@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<RansomDetailsViewModel>
+@{
     ViewData["Title"] = "My Ransomwares";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -54,34 +55,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (VictimDetail record in Model)
+                            @foreach (RansomDetailsViewModel record in Model)
                                 {
                                     <tr>
-                                        <td class="text-center">@record.MachinName</td>
-                                        <td class="text-center">@record.MachineOS</td>
-                                        <td class="text-center">@record.Country</td>
-                                        <td class="text-center">@record.City</td>
-                                        <td class="text-center">@record.Ip </td>
-                                        <td class="no-padding">
-                                            <div class="margin">
-                                                <div class="btn-group">
-                                                    <button class=" btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                                                        <span class="caret"></span>
-                                                        <span class="sr-only"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" role="menu">
-                                                        <li>
-                                                            <a href="#" v-on:click="detail(@record.Id)">Details</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" v-on:click="remove(@record.Id)">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </td>
+                                        <td class="text-center">@record.Name</td>
+                                        <td class="text-center">@record.Description</td>
+                                        <td class="text-center">@record.Date</td>
                                     </tr>
-                                }*@
+                                }
                         </tbody>
                     </table>
                 </div>

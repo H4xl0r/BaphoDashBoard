@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using BaphoDashBoard.DAL.Services;
-using BaphoDashBoard.VueModels;
+using BaphoDashBoard.ViewModels;
 using BaphoDashBoard.DTO;
 
 namespace BaphoDashBoard.Controllers
@@ -27,7 +27,8 @@ namespace BaphoDashBoard.Controllers
 
         public async Task<IActionResult> RansomwareList()
         {
-            return View();
+            var ransomwaredeatils = await _service.GetRansomwareDetails();
+            return View(ransomwaredeatils);
         }
 
         public async Task<ActionResult> Detail(int id)
@@ -48,7 +49,10 @@ namespace BaphoDashBoard.Controllers
             AppResult result = new AppResult();
             try
             {
-                result = await _service.CreateRansomware(model);
+                if(model != null)
+                {
+                    result = await _service.CreateRansomware(model);
+                }
             }
             catch(Exception ex)
             {
