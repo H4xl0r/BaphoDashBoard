@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,13 +65,7 @@ namespace Baphomet.Utilities
             //Aqui va mi lista de host en caso de que uno de ellos falle.
             //En cada Host tendre un archivo el cual intentare leer, si la peticion se cumple con exito es por que el host esta vivo.
             //En nuestro hostList debemos especificar nuestro host con el nombre del archivo a leer, si el archivo existe en nuestro host esto significa que el host esta vivo.
-            var hostList = new []
-            {
-                "<hosts here>"
-                // "https://wwww.MyExamplehost-1.com/FileToRead.jpg",
-                // "https://www.MyExamplehost-2.com/FileToRead.jpg",
-                // "https://wwww.MyExamplehost-3.com/FileToRead.jpg"
-            };
+            var hostList = new []{"<host list here>"};
             //hago un recorrido de mi lista de host para verificar cual host sigue activo.
             foreach (var host in hostList)
             {

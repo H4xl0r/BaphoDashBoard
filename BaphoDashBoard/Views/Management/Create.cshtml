@@ -1,0 +1,281 @@
+﻿@{
+    ViewData["Title"] = "Create Ransomwares";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .custom-scroll {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none;
+    }
+
+        .custom-scroll ul li {
+            list-style: none;
+        }
+
+    .box-body {
+        background-color: #666
+    }
+</style>
+
+
+<div id="app" class="row">
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-danger">
+                    <div class="box-header" style="background-color:#666">
+                        <h4 class="box-title" style="color:#ffff">Generate Ransomware</h4><small style="color:#fff">...</small>
+
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-social-icon" style="cursor:pointer">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="box border-danger" style="background-color:#666">
+                    <div class="box-header border-bottom">
+                        <h4 class="box-title" style="color:#ffff">Generate Ransomware .exe</h4>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label label-text-color">Ransomware name</label>
+                                    <input v-model="ransomware_name" autocomplete="off" type="text" class="form-control input-console" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-sm">
+                                    <label class="control-label label-text-color">Ransomware Description</label>
+                                    <input v-model="ransomware_descrip" autocomplete="off" type="text" class="form-control input-console" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-sm">
+                                            <label class="control-label label-text-color">Extensions</label>
+
+                                            <div class="input-group" v-on:keyup.enter="addextension">
+                                                <input v-model="new_extension" autocomplete="off" type="text" class="form-control input-console" />
+                                                <span class="input-group-btn">
+                                                    <button @@click="addextension" class="btn btn-tumblr btn-flat" type="button"><i class="fa fa-plus-square"></i></button>
+                                                </span>
+                                            </div>
+
+                                            <div class="custom-scroll border border-danger" style="max-height:100px;height:100px; background-color:#808080">
+
+                                                <ul class="no-margin no-padding" v-for="extension,index in extension_list" :key="index">
+                                                    <li class="no-margin">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <span style="margin-left:4px"><i class="fa fa-caret-right" style="color:rgb(154, 204, 20)"></i> {{extension}}</span>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <i @@click="delete_item(index,'extension')" class="fa fa-trash-o" style="color:#ba0c0c;cursor:pointer"></i>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-sm">
+                                            <label class="control-label label-text-color">Processes</label>
+
+                                            <div class="input-group" v-on:keyup.enter="addprocess">
+                                                <input v-model="new_process" autocomplete="off" type="text" class="form-control input-console" />
+                                                <span class="input-group-btn">
+                                                    <button @@click="addprocess" class="btn btn-tumblr btn-flat" type="button"><i class="fa fa-plus-square"></i></button>
+                                                </span>
+                                            </div>
+
+                                            <div class="custom-scroll border border-danger" style="max-height:100px;height:100px; background-color:#808080">
+
+                                                <ul class="no-margin no-padding" v-for="process,index in processes_list" :key="index">
+                                                    <li class="no-margin">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <span style="margin-left:4px"><i class="fa fa-caret-right" style="color:rgb(154, 204, 20)"></i> {{process}}</span>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <i @@click="delete_item(index,'process')" class="fa fa-trash-o" style="color:#ba0c0c;cursor:pointer"></i>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-sm">
+                                            <label class="control-label label-text-color">Directories to encrypt</label>
+                                            <div class="input-group" v-on:keyup.enter="adddir">
+                                                <input v-model="new_dir" autocomplete="off" type="text" class="form-control input-console" />
+                                                <span class="input-group-btn">
+                                                    <button @@click="adddir" class="btn btn-tumblr btn-flat" type="button"><i class="fa fa-plus-square"></i></button>
+                                                </span>
+                                            </div>
+
+                                            <div class="custom-scroll border border-danger" style="max-height:100px;height:100px; background-color:#808080">
+                                                <ul class="no-margin no-padding" v-for="dir,index in dirs_list" :key="index">
+                                                    <li class="no-margin">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <span style="margin-left:4px"><i class="fa fa-caret-right" style="color:rgb(154, 204, 20)"></i> {{dir}}</span>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <i @@click="delete_item(index,'dirs')" class="fa fa-trash-o" style="color:#ba0c0c;cursor:pointer"></i>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group form-group-sm">
+                                            <label class="control-label label-text-color">My hosting servers</label>
+                                            <div class="input-group" v-on:keyup.enter="addhost">
+                                                <input v-model="new_host" autocomplete="off" type="text" class="form-control input-console" />
+                                                <span class="input-group-btn">
+                                                    <button @@click="addhost" class="btn btn-tumblr btn-flat" type="button"><i class="fa fa-plus-square"></i></button>
+                                                </span>
+                                            </div>
+
+                                            <div class="custom-scroll border border-danger" style="max-height:100px;height:100px; background-color:#808080">
+                                                <ul class="no-margin no-padding" v-for="host,index in host_list" :key="index">
+                                                    <li class="no-margin">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <span style="margin-left:4px"><i class="fa fa-caret-right" style="color:rgb(154, 204, 20)"></i> {{host}}</span>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <i @@click="delete_item(index,'host')" class="fa fa-trash-o" style="color:#ba0c0c;cursor:pointer"></i>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                           
+                            <div class="col-md-12 center-block">
+                                <div class="box no-border">
+                                    <div class="box-body no-border">
+                                        <button @@click="generate_ransomware" type="button" class="btn btn-primary btn-xs btn-block">Generate Ransomware</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/js/javascript-map.min.js"></script>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var dataLst = new Vue({
+            el: "#app",
+            mixins: [vue_base],
+            data: {
+                new_host:"",
+                host_list: [],
+                new_extension: "",
+                extension_list: [],
+                new_process: "",
+                processes_list: [],
+                new_dir: "",
+                dirs_list:[],
+                ransomware_name: "",
+                ransomware_descrip: "",
+            },
+            mounted() {
+            },
+            methods: {
+
+                addhost: function () {
+                    this.host_list.push(this.new_host);
+                },
+
+                addextension: function () {
+                    this.extension_list.push(this.new_extension);
+                },
+
+                addprocess: function () {
+                    this.processes_list.push(this.new_process);
+                },
+
+                adddir: function () {
+                    this.dirs_list.push(this.new_dir);
+                },
+
+                delete_item: function (index, array_name) {
+                    switch (array_name) {
+                        case 'extension':
+                            this.extension_list.splice(index, 1);
+                            break;
+
+                        case 'process':
+                            this.processes_list.splice(index, 1);
+                            break
+
+                        case 'dirs':
+                            this.dirs_list.splice(index, 1);
+                            break;
+
+                        case 'host':
+                            this.host_list.splice(index, 1);
+                            break;
+                    }
+                },
+
+                generate_ransomware: function () {
+
+                    var parameters = {
+                        name: this.ransomware_name,
+                        description: this.ransomware_descrip,
+                        hosts: JSON.stringify(this.host_list),
+                        extensions: JSON.stringify(this.extension_list),
+                        processes: JSON.stringify(this.processes_list),
+                        dirs: JSON.stringify(this.dirs_list)
+                    };
+
+                    this.get_request('@Url.Action("GenerateRansomware", "Management")', parameters).then(response => {
+                        if (response.data.success !== false) {
+                            this.show_success_notification(response.data.message);
+                        }
+                    });
+                },
+            }
+        });
+    </script>
+}

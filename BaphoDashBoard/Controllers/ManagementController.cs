@@ -31,6 +31,11 @@ namespace BaphoDashBoard.Controllers
             return View(ransomwaredeatils);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> Detail(int id)
         {
             var victimdetails = await _service.Details(id);

