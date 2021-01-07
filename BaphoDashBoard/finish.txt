@@ -1,0 +1,8 @@
+Microsoft (R) Build Engine version 16.7.0+7fb82e5b2 for .NET
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Determining projects to restore...
+  Restored C:\Users\chungo\Documents\BaphoDashBoard\BaphoDashBoard\BaphoDashBoard.csproj (in 859 ms).
+DAL\Services\ManagementService.cs(24,49): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [C:\Users\chungo\Documents\BaphoDashBoard\BaphoDashBoard\BaphoDashBoard.csproj]
+Startup.cs(38,38): error CS1061: 'IMvcBuilder' does not contain a definition for 'AddRazorRuntimeCompilation' and no accessible extension method 'AddRazorRuntimeCompilation' accepting a first argument of type 'IMvcBuilder' could be found (are you missing a using directive or an assembly reference?) [C:\Users\chungo\Documents\BaphoDashBoard\BaphoDashBoard\BaphoDashBoard.csproj]
+DAL\Services\ManagementService.cs(254,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [C:\Users\chungo\Documents\BaphoDashBoard\BaphoDashBoard\BaphoDashBoard.csproj]
