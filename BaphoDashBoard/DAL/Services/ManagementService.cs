@@ -50,7 +50,7 @@ namespace BaphoDashBoard.DAL.Services
             return result;
         }
 
-        public async Task<AppResult> Delete(int id)
+        public async Task<AppResult> DeleteVictim(int id)
         {
             AppResult result = new AppResult();
             try
@@ -72,6 +72,28 @@ namespace BaphoDashBoard.DAL.Services
             return result;
         }
 
+        public async Task<AppResult> DeleteRansom(int id)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                var record_to_delete = await _context.Ransomware.Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (record_to_delete != null)
+                {
+                    _context.Ransomware.Remove(record_to_delete);
+                    await _context.SaveChangesAsync();
+                    result.success = true;
+                    result.message = "record delete";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
+        }
+
         public async Task<List<RansomDetailsViewModel>> GetRansomwareDetails()
         {
             List<RansomDetailsViewModel> ransomwaredetails = new List<RansomDetailsViewModel>();
@@ -79,6 +101,7 @@ namespace BaphoDashBoard.DAL.Services
             {
                 ransomwaredetails = await _context.Ransomware.Select(x => new RansomDetailsViewModel()
                 {
+                    Id = x.Id,
                     Name = x.Name,
                     Description = x.Description,
                     Date = x.ReleaseDate.ToShortDateString()
@@ -190,8 +213,8 @@ namespace BaphoDashBoard.DAL.Services
                         PublicKey = rsa_keys.PublicKey,
                         PrivateKey = rsa_keys.PrivateKey
                     };
-                   //  _context.Ransomware.Add(ransomware);
-                   //   await _context.SaveChangesAsync();
+                     _context.Ransomware.Add(ransomware);
+                      await _context.SaveChangesAsync();
 
                     result.message = "Your ransomare has been compiled successfully!";
                 }

