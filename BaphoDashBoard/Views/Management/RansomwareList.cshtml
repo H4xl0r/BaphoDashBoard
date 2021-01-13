@@ -143,8 +143,10 @@
             methods: {
 
                 decryptkey: function () {
-                    var file = this.filecontent[0];
-                    this.post_request('@Url.Action("DecrypSecretKey", "Management")', file).then(response => {
+                    let formData = new FormData();
+                    formData.append('file', this.filecontent[0]);
+
+                    this.post_request_file('@Url.Action("DecrypSecretKey", "Management")', formData).then(response => {
                        
                     });
                 },

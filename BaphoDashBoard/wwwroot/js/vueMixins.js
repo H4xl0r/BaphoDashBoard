@@ -32,6 +32,22 @@
                // this.show_spinner = false;
             });
         },
+        post_request_file: function (url, parameter) {
+            const headers = {
+                'Content-Type': 'multipart/form-data'
+            };
+
+            return axios({
+                method: 'post',
+                headers: headers,
+                url: url,
+                data: parameter
+            }).catch(function (error) {
+                self.show_notification(error);
+            });
+
+        },
+
         show_error_notification: function (message) {
             $.toast({
                 heading: '',
