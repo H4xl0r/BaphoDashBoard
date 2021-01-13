@@ -10,6 +10,7 @@ using BaphoDashBoard.DAL.Services;
 using BaphoDashBoard.ViewModels;
 using BaphoDashBoard.DTO;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BaphoDashBoard.Controllers
 {
@@ -76,12 +77,16 @@ namespace BaphoDashBoard.Controllers
             return Json(result);
         }
 
-        public async Task<AppResult> DecrypSecretKey([FromForm(Name = "fields")] IFormFile file)
+        [HttpPost]
+        public async Task<AppResult> DecrypSecretKey(IFormFile file)
         {
             AppResult result = new AppResult();
             try
             {
-
+                if(file != null)
+                {
+                    var secret_key = await _service.GetSecretKey(file);
+                }
             }
             catch(Exception ex)
             {

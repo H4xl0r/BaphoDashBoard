@@ -12,6 +12,9 @@ using BaphoDashBoard.ViewModels;
 using System.IO;
 using System.Collections;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace BaphoDashBoard.DAL.Services
 {
@@ -407,6 +410,63 @@ namespace BaphoDashBoard.DAL.Services
                 }
             }
             catch (Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
+        }
+
+        public async Task<AppResult<string>> GetSecretKey(IFormFile file)
+        {
+            AppResult<string> result = new AppResult<string>();
+            try
+            {
+                var privatekey_list = await _context.Ransomware.Select(x => x.PrivateKey).ToListAsync();
+
+                var ms = new MemoryStream();
+                file.OpenReadStream().CopyTo(ms);
+                byte[] dataToDecrypt = ms.ToArray();
+                foreach(var privatekey in privatekey_list)
+                {
+                    var get_secretkey = RSADecrypt(dataToDecrypt, privatekey);
+                    if(get_secretkey.success != false)
+                    {
+                        result.MRObject = get_secretkey.MRObject;
+                        break;
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+
+            return result;
+        }
+
+        public AppResult<string> RSADecrypt(byte[] dataToDecrypt, string privatekey)
+        {
+            AppResult<string> result = new AppResult<string>();
+            try
+            {
+                byte[] decryptedData;
+
+                using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+                {
+                    rsa.FromXmlString(privatekey);
+                    decryptedData = rsa.Decrypt(dataToDecrypt, false);
+                }
+                UnicodeEncoding byteConverter = new UnicodeEncoding();
+                var secretkey = byteConverter.GetString(decryptedData);
+                result.MRObject = secretkey;
+            }
+            catch(Exception ex)
             {
                 result.success = false;
                 result.message = ex.Message;

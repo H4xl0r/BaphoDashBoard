@@ -88,41 +88,38 @@
                     <div class="box-header">
                         <h4 class="box-title" style="color:#ffff">Decrypt key</h4>
                     </div>
-                    <div class="box-body">
-                       <div class="small-box bg-gray">
-                           <div class="row">
-                               <div class="col-md-4"></div>
+                        <div class="box-body">
+                            <div class="small-box bg-gray">
+                                <div class="row">
+                                    <div class="col-md-4"></div>
 
-                               <div class="col-md-4">
-                                   <div class="info-box text-center">
-                                       <form  enctype="multipart/form-data">
-                                           <div class="bg-gray  no-margin d-flex justify-content-center" @@dragover="dragover" @@dragleave="dragleave" @@drop="drop">
+                                    <div class="col-md-4">
+                                        <div class="info-box text-center">
 
-                                               <input style="display:none" type="file" multiple name="fields" id="assetsFieldHandle"
-                                                      class="w-px h-px opacity-0 overflow-hidden absolute" @@change="onChange" ref="file" accept=".key,.jpg" />
+                                            <div class="bg-gray  no-margin d-flex justify-content-center" @@dragover="dragover" @@dragleave="dragleave" @@drop="drop">
 
-                                               <label for="assetsFieldHandle" class="info-box-icon" style="margin-top:20px; margin-bottom:20px; cursor:pointer">
-                                                   <i class="fa fa-lock"></i>
-                                               </label>
-                                           </div>
-                                       </form>
-                                      
-                                       <span style="color:#666" v-for="file in filecontent">${file.name}</span>
+                                                <input style="display:none" type="file" multiple name="file" id="assetsFieldHandle"
+                                                       class="w-px h-px opacity-0 overflow-hidden absolute" @@change="onChange" ref="file" accept=".key,.jpg,.txt" />
 
-                                   </div>
-                               </div>
+                                                <label for="assetsFieldHandle" class="info-box-icon" style="margin-top:20px; margin-bottom:20px; cursor:pointer">
+                                                    <i class="fa fa-lock"></i>
+                                                </label>
+                                            </div>
+                                            <span style="color:#666" v-for="file in filecontent">${file.name}</span>
 
-                               <div class="col-md-4"></div>
-                           </div>
+                                        </div>
+                                    </div>
 
-                           <a class="small-box-footer">Drop secretkey</a>
-                       </div>
-                    </div>
-                    <div class="box-footer no-border" style="background-color:#666">
-                        <button @@click="decryptkey" class="btn btn-xs btn-block btn-primary">Decrypt key</button>
+                                    <div class="col-md-4"></div>
+                                </div>
 
-                    </div>
+                                <a class="small-box-footer">Drop secretkey</a>
+                            </div>
+                        </div>
 
+                        <div class="box-footer no-border" style="background-color:#666">
+                            <button @@click="decryptkey" class="btn btn-xs btn-block btn-primary">Decrypt key</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -146,8 +143,9 @@
             methods: {
 
                 decryptkey: function () {
-                    this.post_request('@Url.Action("DecrypSecretKey", "Management")').then(response => {
-
+                    var file = this.filecontent[0];
+                    this.post_request('@Url.Action("DecrypSecretKey", "Management")', file).then(response => {
+                       
                     });
                 },
 
