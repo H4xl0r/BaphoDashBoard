@@ -78,21 +78,24 @@ namespace BaphoDashBoard.Controllers
         }
 
         [HttpPost]
-        public async Task<AppResult> DecrypSecretKey(IFormFile file)
+        public async Task<IActionResult> DecrypSecretKey(IFormFile file)
         {
-            AppResult result = new AppResult();
+            AppResult<string> result = new AppResult<string>();
             try
             {
                 if(file != null)
                 {
                     var secret_key = await _service.GetSecretKey(file);
+                    if (secret_key.success != false)
+                        result = secret_key;
                 }
             }
             catch(Exception ex)
             {
-
+                result.success = false;
+                result.message = ex.Message;
             }
-            return result;
+            return Json(result);
         }
 
     }

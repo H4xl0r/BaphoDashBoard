@@ -31,7 +31,7 @@
             <div class="col-md-12">
                 <div class="box box-danger">
                     <div class="box-header" style="background-color:#666">
-                        <h4 class="box-title" style="color:#ffff">My Ransomware's</h4><small style="color:#fff">...</small>
+                        <h4 class="box-title" style="color:#ffff">My Ransomware's</h4><small style="color:#fff"> ransomware key management</small>
 
                         <div class="box-tools pull-right">
                             <a class="btn btn-social-icon" style="cursor:pointer">
@@ -147,7 +147,7 @@
                     formData.append('file', this.filecontent[0]);
 
                     this.post_request_file('@Url.Action("DecrypSecretKey", "Management")', formData).then(response => {
-                       
+                        console.log(response.data);
                     });
                 },
 
