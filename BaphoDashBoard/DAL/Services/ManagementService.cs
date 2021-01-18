@@ -266,8 +266,18 @@ namespace BaphoDashBoard.DAL.Services
                 {
                     if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
                     {
-                        var strCmdText = "/K cd " + output_path + " & compile.bat";
-                        Process.Start("bash", strCmdText).WaitForExit();
+                        var command = "cd " + output_path + " && bash compile.bat";
+
+                        Process proc = new System.Diagnostics.Process ();
+                        proc.StartInfo.FileName = "/bin/bash";
+                        proc.StartInfo.Arguments = "-c \" " + command + " \"";
+                        proc.StartInfo.UseShellExecute = false; 
+                        proc.StartInfo.RedirectStandardOutput = true;
+                        proc.Start ();
+
+                        while (!proc.StandardOutput.EndOfStream) {
+                            Console.WriteLine (proc.StandardOutput.ReadLine ());
+                        }
                     }
                 }
             }

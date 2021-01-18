@@ -105,8 +105,11 @@
                                                     <i class="fa fa-lock"></i>
                                                 </label>
                                             </div>
-                                            <span style="color:#666" v-for="file in filecontent">${file.name}</span>
+                                            <span style="color:#666" v-for="file in filecontent">{{file.name}}</span>
+                                        </div>
 
+                                        <div class="text-center bg-green margin-bottom">
+                                            <span class="text-center" style="color:#666">{{key_plaintext}}</span>
                                         </div>
                                     </div>
 
@@ -134,9 +137,9 @@
         var dataLst = new Vue({
             el: "#app",
             mixins: [vue_base],
-            delimiters: ['${', '}'],
             data: {
-                filecontent:[]
+                filecontent:[],
+                key_plaintext:""
             },
             mounted() {
             },
@@ -148,12 +151,19 @@
 
                     this.post_request_file('@Url.Action("DecrypSecretKey", "Management")', formData).then(response => {
                         console.log(response.data);
+                        if(response.data.success != false)
+                        {
+                            this.show_success_notification(response.data.message);
+                            this.key_plaintext = response.data.mrObject;
+                        }
+                        else{
+                            this.show_error_notification(response.data.message);
+                        }
                     });
                 },
 
                 onChange() {
                     this.filecontent = [...this.$refs.file.files];
-                    console.log(this.filecontent);
                 },
 
                 dragover(event) {
