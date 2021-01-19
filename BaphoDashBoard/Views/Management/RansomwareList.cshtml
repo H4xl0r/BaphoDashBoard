@@ -5,26 +5,43 @@
 }
 
 <style>
-    .custom-scroll {
-        overflow-y: scroll;
-        -webkit-overflow-scrolling: touch;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-        .custom-scroll::-webkit-scrollbar {
-            display: none; /* Safari and Chrome */
-        }
-
-        .custom-scroll ul li {
-            list-style: none;
-        }
     .box-body {
         background-color:#666
     }
 </style>
 
 <div id="app" class="row">
+    <!--Modal-->
+    <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Plase, paste your decryot key here.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-key"></i></span>
+                        </div>
+                        <input v-model="modal_key" class="form-control" type="text" placeholder="simetric key here..." autocomplete="off">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button v-on:click="generate_decrypt_exe" type="button" class="btn btn-primary" :disabled="button_display">
+                         Generate Decryptor
+                        <i class="fa fa-cog fa-spin" v-show="loading_conf"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End modal-->
+
     <div class="col-md-12">
 
         <div class="row">
@@ -70,6 +87,9 @@
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
                                                     <li>
+                                                        <a type="button" data-toggle="modal" data-target="#mymodal" href="#">Decrypt .exe</a>
+                                                    </li>
+                                                    <li>
                                                         <a href="#" v-on:click="remove(@record.Id)">Delete</a>
                                                     </li>
                                                 </ul>
@@ -88,41 +108,46 @@
                     <div class="box-header">
                         <h4 class="box-title" style="color:#ffff">Decrypt key</h4>
                     </div>
-                        <div class="box-body">
-                            <div class="small-box bg-gray">
-                                <div class="row">
-                                    <div class="col-md-4"></div>
+                    <div class="box-body">
+                        <div class="small-box bg-gray">
+                            <div class="row">
+                                <div class="col-md-4"></div>
 
-                                    <div class="col-md-4">
-                                        <div class="info-box text-center">
+                                <div class="col-md-4">
+                                    <div class="info-box text-center">
 
-                                            <div class="bg-gray  no-margin d-flex justify-content-center" @@dragover="dragover" @@dragleave="dragleave" @@drop="drop">
+                                        <div class="bg-gray  no-margin d-flex justify-content-center" @@dragover="dragover" @@dragleave="dragleave" @@drop="drop">
 
-                                                <input style="display:none" type="file" multiple name="file" id="assetsFieldHandle"
-                                                       class="w-px h-px opacity-0 overflow-hidden absolute" @@change="onChange" ref="file" accept=".key,.jpg,.txt" />
+                                            <input style="display:none" type="file" multiple name="file" id="assetsFieldHandle"
+                                                   class="w-px h-px opacity-0 overflow-hidden absolute" @@change="onChange" ref="file" accept=".key,.jpg,.txt" />
 
-                                                <label for="assetsFieldHandle" class="info-box-icon" style="margin-top:20px; margin-bottom:20px; cursor:pointer">
-                                                    <i class="fa fa-lock"></i>
-                                                </label>
-                                            </div>
-                                            <span style="color:#666" v-for="file in filecontent">{{file.name}}</span>
+                                            <label for="assetsFieldHandle" class="info-box-icon" style="margin-top:20px; margin-bottom:20px; cursor:pointer">
+                                                <i class="fa fa-lock"></i>
+                                            </label>
                                         </div>
-
-                                        <div class="text-center bg-green margin-bottom">
-                                            <span class="text-center" style="color:#666">{{key_plaintext}}</span>
-                                        </div>
+                                        <span style="color:#666" v-for="file in filecontent">{{file.name}}</span>
                                     </div>
 
-                                    <div class="col-md-4"></div>
                                 </div>
 
-                                <a class="small-box-footer">Drop secretkey</a>
+                                <div class="col-md-4"></div>
                             </div>
+
+                            <a class="small-box-footer">Drop secretkey</a>
                         </div>
 
-                        <div class="box-footer no-border" style="background-color:#666">
-                            <button @@click="decryptkey" class="btn btn-xs btn-block btn-primary">Decrypt key</button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box bg-green no-border no-border">
+                                    <h5 class="text-center">{{key_plaintext}}</h5>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="box-footer no-border" style="background-color:#666">
+                        <button @@click="decryptkey" class="btn btn-xs btn-block btn-primary">Decrypt key</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,11 +164,39 @@
             mixins: [vue_base],
             data: {
                 filecontent:[],
-                key_plaintext:""
+                key_plaintext: "",
+                modal_key: "",
+                button_display: false,
+                loading_conf: false
             },
             mounted() {
             },
             methods: {
+
+                generate_decrypt_exe: function () {
+                    this.loading_conf = true;
+                    this.button_display = true;
+
+                    if (this.key_plaintext != "") {
+                        this.modal_key = this.key_plaintext;
+                    }
+
+                    var parameter = {
+                        key: this.modal_key
+                    };
+
+                    this.get_request('@Url.Action("GenerateDecryptor", "Management")', parameter).then(response => {
+                        console.log(response.data);
+                        if (response.data.success != false) {
+                            this.show_success_notification(response.data.message);
+                            this.loading_conf = false;
+                            this.button_display = false;
+                        }
+                        else {
+                            this.show_error_notification(response.data.message);
+                        }
+                    });
+                },
 
                 decryptkey: function () {
                     let formData = new FormData();
