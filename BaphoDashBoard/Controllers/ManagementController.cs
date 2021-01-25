@@ -77,6 +77,32 @@ namespace BaphoDashBoard.Controllers
             return Json(result);
         }
 
+        public async Task<IActionResult> GenerateDecryptor([FromQuery] string key)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                if(key != null)
+                {
+                     result = await _service.GenerateDecryptor(key);
+                    if (result.success != false)
+                        result.message = "Decryptor has been compiled successfully!";
+                }
+                else
+                {
+                    result.success = false;
+                    result.message = "No key found";
+                }
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+
+            return Json(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> DecrypSecretKey(IFormFile file)
         {

