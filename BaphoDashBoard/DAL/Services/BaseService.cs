@@ -40,7 +40,7 @@ namespace BaphoDashBoard.DAL.Services
                     content = sr.ReadToEnd();
                     //Creo un array de cada objeto(cada modelo de informacion de mi victima).
                     //Debido a que este no viene como un json debemos anadirle algunos caracteres para que si lo sea.
-                    var json_string = content.Replace("}", "},").Remove(content.LastIndexOf(","),",".Length);
+                    var json_string = content.Replace("}", "},");
                     json_string = "[" + json_string + "]";
                     var object_array = JsonConvert.DeserializeObject<List<VictimDetailsDTO>>(json_string);
                     //Una vez tengo mi lista de victimas paso a rrecorerla una a una para saber que record guardo y cual no.
