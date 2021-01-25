@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 
 namespace BaphoDashBoard.DAL.Services
 {
