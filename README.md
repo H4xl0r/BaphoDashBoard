@@ -1,4 +1,5 @@
-# BaphoDashBoard
+![#](https://i.imgur.com/HjgaPAZ.jpg)
+
 
 [![dot net core 3.1](https://img.shields.io/badge/dotnet%20core-3.1-blue)](https://dotnet.microsoft.com/download/dotnet-core/3.1) 
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](https://github.com/Sh4rk0-666/BaphoDashBoard/blob/master/LICENSE)
