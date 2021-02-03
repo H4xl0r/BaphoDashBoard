@@ -42,7 +42,7 @@ thrown out for educational purposes and so we can get something out of it to lea
 For complete tutorials of Baphodashboard use join me on Patreon, where I will be sharing information and exclusive content about hacking, malware creation, tutorials for use my projects, etc. [![Patreon](https://img.shields.io/badge/HackingPills-Patreon-critical)](https://www.patreon.com/HackingPills)
 
 **Video Demo**
-* lbry://@HackingPills#c/BaphoDashBoard-Generate-Ransomware-Tool#6
+* https://open.lbry.com/@HackingPills:c/BaphoDashBoard-Generate-Ransomware-Tool:6?r=2FfhiGAXcxqD1V7dnpaZYmDo3gmSz6pw
 
 **Ransomware original source code**
 * [![Baphomet](https://img.shields.io/badge/Baphomet-Ransomware)](https://github.com/Sh4rk0-666/Baphomet)
